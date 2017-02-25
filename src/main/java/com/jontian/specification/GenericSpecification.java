@@ -1,9 +1,5 @@
 package com.jontian.specification;
 
-/**
- * Created by jtian on 10/28/2016.
- */
-
 import com.jontian.specification.exception.GenericFilterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +11,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by jtian on 10/27/2016.
- */
 public class GenericSpecification implements Specification<Object> {
     protected static final String EQUAL = "eq";
     protected static final String NOT_EQUAL = "neq";

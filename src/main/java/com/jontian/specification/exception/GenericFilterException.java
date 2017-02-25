@@ -1,8 +1,5 @@
 package com.jontian.specification.exception;
 
-/**
- * Created by jtian on 11/10/2016.
- */
 public class GenericFilterException extends Exception {
     public GenericFilterException() {
     }

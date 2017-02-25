@@ -6,9 +6,6 @@ import org.springframework.hateoas.core.EmbeddedWrapper;
 import org.springframework.hateoas.core.EmbeddedWrappers;
 import java.util.Collections;
 import java.util.List;
-/**
- * Created by jtian on 11/8/2016.
- */
 public class GeneralFilterService {
 
     public PagedResources<?> toPagedResources(Page<?> data, Class<?> clazz) {

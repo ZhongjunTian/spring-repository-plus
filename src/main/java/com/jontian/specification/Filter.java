@@ -1,9 +1,5 @@
 package com.jontian.specification;
 
-
-/**
- * Created by jtian on 11/8/2016.
- */
 public class Filter {
     String logic;
     String field;
