@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Below property needs to be defined for logback issue https://github.com/spring-projects/spring-boot/issues/2558 -->
+    <!--<property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}"/>-->
+    <!--<property name="FILE_LOG_PATTERN"-->
+              <!--value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } [%t] -&#45;&#45; %-40.40logger{39} : %m%n%wex"/>-->
+
+    <!--org.hibernate.type.descriptor.sql.BasicExtractor-->
+    <!--<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />-->
+    <!--<Logger name="org.hibernate.SQL" level="debug" />-->
+    <!--<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">-->
+        <!--<encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+            <!--<fieldNames>-->
+                <!--<timestamp>ts</timestamp>-->
+                <!--<message>msg</message>-->
+                <!--<thread>[ignore]</thread>-->
+                <!--<levelValue>[ignore]</levelValue>-->
+                <!--<logger>logger</logger>-->
+                <!--<version>[ignore]</version>-->
+            <!--</fieldNames>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            </appender>
+    <logger name="com.jontian" level="debug"/>
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
