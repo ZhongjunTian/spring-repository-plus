@@ -1,19 +1,38 @@
 package com.jontian.specification;
 
+import java.util.List;
+
 public class Filter {
+    public static final String EQUAL = "eq";
+    public static final String NOT_EQUAL = "neq";
+    public static final String EMPTY_OR_NULL = "isnull";
+    public static final String NOT_EMPTY_AND_NOT_NULL = "isnotnull";
+
+    public static final String CONTAINS = "contains";
+    public static final String NOT_CONTAINS = "doesnotcontain";
+
+    public static final String START_WITH = "startswith";
+    public static final String END_WITH = "endswith";
+
+    public static final String GREATER_THAN = "gt";
+    public static final String LESS_THAN = "lt";
+    public static final String GREATER_THAN_OR_EQUAL = "gte";
+    public static final String LESS_THAN_OR_EQUAL = "lte";
+
+    public static final String IN = "in";
+
+    public static final String PATH_DELIMITER = ".";
     String logic;
     String field;
     String operator;
     Object value;
-    Filter[] filters;
+    List<Filter> filters;
     public Filter(){}
     public Filter(String field, String operator, Object value) {
         this.field = field;
         this.operator = operator;
         this.value = value;
     }
-
-    String criteria;
 
     public String getLogic() {
         return logic;
@@ -47,11 +66,11 @@ public class Filter {
         this.value = value;
     }
 
-    public Filter[] getFilters() {
+    public List<Filter> getFilters() {
         return filters;
     }
 
-    public void setFilters(Filter[] filters) {
+    public void setFilters(List<Filter> filters) {
         this.filters = filters;
     }
 

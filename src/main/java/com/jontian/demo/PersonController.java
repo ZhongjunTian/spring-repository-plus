@@ -4,9 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.core.EmbeddedWrapper;
 import org.springframework.hateoas.core.EmbeddedWrappers;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Collections;
 import java.util.List;
-public class GeneralFilterService {
+
+@RestController
+public class PersonController {
 
     public PagedResources<?> toPagedResources(Page<?> data, Class<?> clazz) {
         List<?> content = data.getContent();

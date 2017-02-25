@@ -11,21 +11,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.jontian.specification.Filter.*;
+
 public class GenericSpecification implements Specification<Object> {
-    protected static final String EQUAL = "eq";
-    protected static final String NOT_EQUAL = "neq";
-    protected static final String EMPTY_OR_NULL = "isnull";
-    protected static final String NOT_EMPTY_AND_NOT_NULL = "isnotnull";
-    protected static final String CONTAINS = "contains";
-    protected static final String NOT_CONTAINS = "doesnotcontain";
-    protected static final String START_WITH = "startswith";
-    protected static final String END_WITH = "endswith";
-    protected static final String GREATER_THAN = "gt";
-    protected static final String LESS_THAN = "lt";
-    protected static final String GREATER_THAN_OR_EQUAL = "gte";
-    protected static final String LESS_THAN_OR_EQUAL = "lte";
-    protected static final String IN = "in";
-    protected static final String PATH_DELIMITER = ".";
     private static final Logger logger = LoggerFactory.getLogger(GenericSpecification.class);
     private Filter[] filters;
     private List<String> joinFetchTables;
@@ -40,18 +28,15 @@ public class GenericSpecification implements Specification<Object> {
     }
 
     /*
-            this method is called by
-            SimpleJpaRepository.applySpecificationToCriteria(Specification<T> spec, CriteriaQuery<S> query)
-            https://github.com/spring-projects/spring-data-jpa/blob/master/src/main/java/org/springframework/data/jpa/repository/support/SimpleJpaRepository.java
-         */
+     this method is called by
+     SimpleJpaRepository.applySpecificationToCriteria(Specification<T> spec, CriteriaQuery<S> query)
+     https://github.com/spring-projects/spring-data-jpa/blob/master/src/main/java/org/springframework/data/jpa/repository/support/SimpleJpaRepository.java
+     */
     @Override
     public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
         try {
             List<Predicate> predicateList = new LinkedList<>();
             Predicate p;
-//            if ((p = getPredicate(filter, root, cb)) != null)
-//                predicateList.add(p);
-
             if (filters != null)
                 for (Filter filter : filters)
                     if (filter != null && (p = getPredicate(filter, root, cb)) != null)
@@ -84,7 +69,7 @@ public class GenericSpecification implements Specification<Object> {
 
     private Predicate getPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws GenericFilterException {
         if (filter == null ||
-                (filter.getField() == null && filter.getFilters() == null && filter.getLogic() ==null && filter.getValue() == null && filter.getOperator() == null))
+                (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null))
             return null;
         if (filter.getLogic() == null) {//one filter
             Predicate p = getSinglePredicate(filter, root, cb);
@@ -119,15 +104,15 @@ public class GenericSpecification implements Specification<Object> {
         Path<String> path = null;
         try {
             path = parsePath(root, field);
-        }catch (Exception e){
-            throw new GenericFilterException("Meet problem when parse field path: "+field+", this path does not exist. "+e.getMessage(), e);
+        } catch (Exception e) {
+            throw new GenericFilterException("Meet problem when parse field path: " + field + ", this path does not exist. " + e.getMessage(), e);
         }
         String operator = filter.getOperator();
         Object value = filter.getValue();
         try {
             return getSinglePredicate(cb, path, operator, value);
         } catch (Exception e) {
-            throw new GenericFilterException("Unable to parse " + String.valueOf(filter) + ", value type:" + value.getClass()+", operator: "+operator +", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
+            throw new GenericFilterException("Unable to parse " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
         }
     }
 
@@ -209,8 +194,8 @@ public class GenericSpecification implements Specification<Object> {
                 p = cb.lessThanOrEqualTo(path, String.valueOf(value));
                 break;
             case IN:
-                if(assertCollection(value)) {
-                    p = path.in((Collection)value);
+                if (assertCollection(value)) {
+                    p = path.in((Collection) value);
                 }
                 break;
             default:
@@ -228,11 +213,12 @@ public class GenericSpecification implements Specification<Object> {
     }
 
     private void assertNumberOrStringOrBoolean(Object value) {
-        if(value instanceof Boolean){
+        if (value instanceof Boolean) {
             return;
         }
         assertNumberOrString(value);
     }
+
     //TODO assert value & entity type
     private void assertNumberOrString(Object value) {
         if (value instanceof Integer || value instanceof Double) {
