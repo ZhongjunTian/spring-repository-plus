@@ -1,4 +1,4 @@
-package com.jontian.demo.db;
+package com.jontian.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
