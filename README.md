@@ -22,7 +22,7 @@ open url <br />
 
 Then look back at application's console, Hibernate will print out executed query
 
-<i>select person0_.id as id1_1_, person0_.address_id as address_2_1_, person0_.first_name as first_na3_1_, person0_.last_name as last_nam4_1_ from person person0_ where person0_.last_name=?
+<i>select person0_.id as id1_1_, person0_.address_id as address_2_1_, person0_.first_name as first_na3_1_, person0_.last_name as last_nam4_1_ from person person0_ where person0_.last_name=?<br />
 select address0_.id as id1_0_0_, address0_.city as city2_0_0_ from address address0_ where address0_.id in (?, ?, ?, ?, ?)<i/>
 
 <h4>2.2 advanced example</h4><br />
