@@ -5,8 +5,10 @@ A easy way to read Spring data repository using Specification
 Pros:
 
 1. Programmally filter data in simple code,<br />
+
                 Filter filter = new Filter("lastName", Filter.EQUAL, "Tian");<br />
                 List<Person> persons = personRepository.findAll(new GenericSpecification(filter));<br />
+                
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
  
