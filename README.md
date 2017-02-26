@@ -6,28 +6,28 @@ Pros:
 
 1. don't have to write ignoring findBy*() in Repository <br />
 2. Join Fetch table without writing Hibernate HQL<br />
-3. Programmally filter data in simple code,
+3. Programmally filter data in simple code,<br />
 
-        Filter filter = new Filter("lastName", Filter.EQUAL, "Tian");
-        List<Person> persons = personRepository.findAll(new GenericSpecification(filter));
+        Filter filter = new Filter("lastName", Filter.EQUAL, "Tian");<br />
+        List<Person> persons = personRepository.findAll(new GenericSpecification(filter));<br />
  
- Supported operator:
- 	 EQUAL = "eq";
-   NOT_EQUAL = "neq";
-   EMPTY_OR_NULL = "isnull";
-   NOT_EMPTY_AND_NOT_NULL = "isnotnull";
-   CONTAINS = "contains";
-   NOT_CONTAINS = "doesnotcontain";
-   START_WITH = "startswith";
-   END_WITH = "endswith";
-   GREATER_THAN = "gt";
-   LESS_THAN = "lt";
-   GREATER_THAN_OR_EQUAL = "gte";
-   LESS_THAN_OR_EQUAL = "lte";
-   IN = "in";
+ Supported operator:<br />
+ 	 EQUAL = "eq";<br />
+   NOT_EQUAL = "neq";<br />
+   EMPTY_OR_NULL = "isnull";<br />
+   NOT_EMPTY_AND_NOT_NULL = "isnotnull";<br />
+   CONTAINS = "contains";<br />
+   NOT_CONTAINS = "doesnotcontain";<br />
+   START_WITH = "startswith";<br />
+   END_WITH = "endswith";<br />
+   GREATER_THAN = "gt";<br />
+   LESS_THAN = "lt";<br />
+   GREATER_THAN_OR_EQUAL = "gte";<br />
+   LESS_THAN_OR_EQUAL = "lte";<br />
+   IN = "in";<br />
    
- Supported logic operator:
- "and" "or"
+ Supported logic operator:<br />
+ "and" "or"<br />
  
 <h2>User guide</h2>
 <h3>1. clone and run</h3>
