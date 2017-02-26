@@ -31,8 +31,8 @@ public class PersonController {
     @GetMapping("/join")
     public ResponseEntity<List<Person>> joinFetch(){
         Filter filter = new Filter("lastName", Filter.EQUAL, "Tian");
-        List<String> joinFetchTables = Arrays.asList("address");
-        GenericSpecification specification = new GenericSpecification(joinFetchTables,filter);
+        String joinFetchTable = "address";
+        GenericSpecification specification = new GenericSpecification(filter, joinFetchTable);
         List<Person> persons = personRepository.findAll(specification);
         return new ResponseEntity<>(persons, HttpStatus.OK);
     }

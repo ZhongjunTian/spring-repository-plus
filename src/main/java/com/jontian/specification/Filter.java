@@ -22,10 +22,12 @@ public class Filter {
     public static final String IN = "in";
 
     public static final String PATH_DELIMITER = ".";
-    String logic;
     String field;
     String operator;
     Object value;
+    public static final String LOGIC_AND ="and";
+    public static final String LOGIC_OR ="or";
+    String logic;
     List<Filter> filters;
     public Filter(){}
     public Filter(String field, String operator, Object value) {

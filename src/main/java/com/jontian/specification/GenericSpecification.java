@@ -15,17 +15,18 @@ import static com.jontian.specification.Filter.*;
 
 public class GenericSpecification implements Specification<Object> {
     private static final Logger logger = LoggerFactory.getLogger(GenericSpecification.class);
-    private Filter[] filters;
-    private List<String> joinFetchTables;
+    private Filter filter;
+    private String[] joinFetchTables;
 
-    public GenericSpecification(List<String> joinFetchTables, Filter... filters) {
+    public GenericSpecification(Filter filter) {
+        this.filter = filter;
+    }
+
+    public GenericSpecification(Filter filter, String... joinFetchTables) {
         this.joinFetchTables = joinFetchTables;
-        this.filters = filters;
+        this.filter = filter;
     }
 
-    public GenericSpecification(Filter... filters) {
-        this.filters = filters;
-    }
 
     /*
      this method is called by
@@ -35,31 +36,25 @@ public class GenericSpecification implements Specification<Object> {
     @Override
     public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
         try {
-            List<Predicate> predicateList = new LinkedList<>();
-            Predicate p;
-            if (filters != null)
-                for (Filter filter : filters)
-                    if (filter != null && (p = getPredicate(filter, root, cb)) != null)
-                        predicateList.add(p);
+            Predicate predicate = getPredicate(filter, root, cb);
 
             joinFetchForSelectQuery(root, cq, joinFetchTables);
 
-            if (predicateList.isEmpty())
+            if (predicate == null)
                 return cb.conjunction();
             else
-                return cb.and(
-                        predicateList.toArray(
-                                new Predicate[predicateList.size()]
-                        )
-                );
+                return predicate;
         } catch (GenericFilterException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void joinFetchForSelectQuery(Root<Object> root, CriteriaQuery<?> cq, List<String> joinFetchTables) {
-        if (!isCountCriteriaQuery(cq) //important logic because count query cannot join fetch
-                && joinFetchTables != null && !joinFetchTables.isEmpty()) {
+    private void joinFetchForSelectQuery(Root<Object> root, CriteriaQuery<?> cq, String[] joinFetchTables) {
+        //because this piece of code may be run twice for pagination,
+        //first time 'count' , second time 'select',
+        //So, if this is called by 'count', don't join fetch tables.
+        if (!isCountCriteriaQuery(cq)
+                && joinFetchTables != null && (joinFetchTables.length > 0)) {
             for (String table : joinFetchTables) {
                 root.fetch(table, JoinType.LEFT);
             }
@@ -72,26 +67,14 @@ public class GenericSpecification implements Specification<Object> {
                 (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null))
             return null;
         if (filter.getLogic() == null) {//one filter
-            Predicate p = getSinglePredicate(filter, root, cb);
+            Predicate p = getSinglePredicateByPath(filter, root, cb);
             return p;
         } else {//logic filters
-            if (filter.getLogic().equals("and")) {
-                List<Predicate> predicateList = new LinkedList<>();
-                for (Filter f : filter.getFilters()) {
-                    Predicate predicate = getPredicate(f, root, cb);
-                    if (predicate != null)
-                        predicateList.add(predicate);
-                }
-                Predicate[] predicates = predicateList.toArray(new Predicate[predicateList.size()]);
+            if (filter.getLogic().equals(LOGIC_AND)) {
+                Predicate[] predicates = getPredicateList(filter, root, cb);
                 return cb.and(predicates);
-            } else if (filter.getLogic().equals("or")) {
-                List<Predicate> predicateList = new LinkedList<>();
-                for (Filter f : filter.getFilters()) {
-                    Predicate predicate = getPredicate(f, root, cb);
-                    if (predicate != null)
-                        predicateList.add(predicate);
-                }
-                Predicate[] predicates = predicateList.toArray(new Predicate[predicateList.size()]);
+            } else if (filter.getLogic().equals(LOGIC_OR)) {
+                Predicate[] predicates = getPredicateList(filter, root, cb);
                 return cb.or(predicates);
             } else {
                 throw new GenericFilterException("Unknown filter logic" + filter.getLogic());
@@ -99,7 +82,17 @@ public class GenericSpecification implements Specification<Object> {
         }
     }
 
-    private Predicate getSinglePredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws GenericFilterException {
+    private Predicate[] getPredicateList(Filter filter, Path<Object> root, CriteriaBuilder cb) throws GenericFilterException {
+        List<Predicate> predicateList = new LinkedList<>();
+        for (Filter f : filter.getFilters()) {
+            Predicate predicate = getPredicate(f, root, cb);
+            if (predicate != null)
+                predicateList.add(predicate);
+        }
+        return predicateList.toArray(new Predicate[predicateList.size()]);
+    }
+
+    private Predicate getSinglePredicateByPath(Filter filter, Path<Object> root, CriteriaBuilder cb) throws GenericFilterException {
         String field = filter.getField();
         Path<String> path = null;
         try {
@@ -110,7 +103,7 @@ public class GenericSpecification implements Specification<Object> {
         String operator = filter.getOperator();
         Object value = filter.getValue();
         try {
-            return getSinglePredicate(cb, path, operator, value);
+            return getSinglePredicateByPath(cb, path, operator, value);
         } catch (Exception e) {
             throw new GenericFilterException("Unable to parse " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
         }
@@ -129,13 +122,13 @@ public class GenericSpecification implements Specification<Object> {
         return cq.getResultType().toString().contains("java.lang.Long");
     }
 
-    private Predicate getSinglePredicate(CriteriaBuilder cb, Path<String> path, String operator, Object value) throws GenericFilterException {
+    private Predicate getSinglePredicateByPath(CriteriaBuilder cb, Path<String> path, String operator, Object value) throws GenericFilterException {
         Class<? extends String> entityType = path.getJavaType();
         Predicate p = null;
 
         switch (operator) {
             /*
-                Operator for String/Number/Date
+                Operator for String/Number/Date/Boolean
              */
             case EQUAL:
                 assertNumberOrStringOrBoolean(value);
@@ -145,6 +138,9 @@ public class GenericSpecification implements Specification<Object> {
                 assertNumberOrStringOrBoolean(value);
                 p = cb.notEqual(path, (value));
                 break;
+            /*
+                Operator for String/Date
+             */
             case EMPTY_OR_NULL:
                 p = cb.isNull(path);
                 if (entityType.equals(String.class) || entityType.equals(Date.class))
