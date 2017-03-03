@@ -1,13 +1,14 @@
 # Spring-Repository-Specification
 
-A easy way to read Spring data repository using Specification
+A easy way to extend Spring Boot and Hibernate to have high performance, high flexibility and JOOQ functional style code
 
 Pros:
 
 1. Programmally filter data in simple code,<br />
 
-List< Person > persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();
-                
+     List< Person > persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();
+     List< Person > persons = select(Person.class).from(personRepository).leftJoin("address").where("lastName", EQUAL, "Tian").findAll();
+    
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
 
