@@ -6,27 +6,11 @@ Pros:
 
 1. Programmally filter data in simple code,<br />
 
-                Filter filter = new Filter("lastName", Filter.EQUAL, "Tian");
-                List<Person> persons = personRepository.findAll(new GenericSpecification(filter));
+List<Person> persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();
                 
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
- 
- Supported operator:<br />
- 	 EQUAL = "eq";<br />
-   NOT_EQUAL = "neq";<br />
-   EMPTY_OR_NULL = "isnull";<br />
-   NOT_EMPTY_AND_NOT_NULL = "isnotnull";<br />
-   CONTAINS = "contains";<br />
-   NOT_CONTAINS = "doesnotcontain";<br />
-   START_WITH = "startswith";<br />
-   END_WITH = "endswith";<br />
-   GREATER_THAN = "gt";<br />
-   LESS_THAN = "lt";<br />
-   GREATER_THAN_OR_EQUAL = "gte";<br />
-   LESS_THAN_OR_EQUAL = "lte";<br />
-   IN = "in";<br />
-   
+
  Supported logic operator:<br />
  "and" "or"<br />
  
