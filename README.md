@@ -6,9 +6,13 @@ Pros:
 
 1. Programmally filter data in simple code,<br />
 
+     List persons = select(Person.class).from(personRepository).findAll();
+     
      List persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();
      
-     List persons = select(Person.class).from(personRepository).leftJoin("address").where("lastName", EQUAL, "Tian").findAll();
+     List persons = select(Person.class).from(personRepository).leftJoin("address").findAll();
+     
+     Page persons = select(Person.class).from(personRepository).findPage();
     
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
