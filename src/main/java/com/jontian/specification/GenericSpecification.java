@@ -16,14 +16,21 @@ import static com.jontian.specification.Filter.*;
 public class GenericSpecification implements Specification<Object> {
     private static final Logger logger = LoggerFactory.getLogger(GenericSpecification.class);
     private Filter filter;
-    private String[] joinFetchTables;
+    private List<String> joinFetchTables;
 
     public GenericSpecification(Filter filter) {
         this.filter = filter;
     }
 
-    public GenericSpecification(Filter filter, String... joinFetchTables) {
+    public GenericSpecification(Filter filter, List<String> joinFetchTables) {
         this.joinFetchTables = joinFetchTables;
+        this.filter = filter;
+    }
+    public GenericSpecification(Filter filter, String... joinFetchTables) {
+        if(joinFetchTables != null)
+            for(String table : joinFetchTables){
+                this.joinFetchTables.add(table);
+            }
         this.filter = filter;
     }
 
@@ -38,7 +45,7 @@ public class GenericSpecification implements Specification<Object> {
         try {
             Predicate predicate = getPredicate(filter, root, cb);
 
-            joinFetchForSelectQuery(root, cq, joinFetchTables);
+            joinFetchTables(root, cq, joinFetchTables);
 
             if (predicate == null)
                 return cb.conjunction();
@@ -49,14 +56,16 @@ public class GenericSpecification implements Specification<Object> {
         }
     }
 
-    private void joinFetchForSelectQuery(Root<Object> root, CriteriaQuery<?> cq, String[] joinFetchTables) {
+    private void joinFetchTables(Root<Object> root, CriteriaQuery<?> cq, List<String> joinFetchTables) {
         //because this piece of code may be run twice for pagination,
         //first time 'count' , second time 'select',
         //So, if this is called by 'count', don't join fetch tables.
-        if (!isCountCriteriaQuery(cq)
-                && joinFetchTables != null && (joinFetchTables.length > 0)) {
+        if (isCountCriteriaQuery(cq))
+            return;
+        if( joinFetchTables != null && (joinFetchTables.size() > 0)) {
             for (String table : joinFetchTables) {
-                root.fetch(table, JoinType.LEFT);
+                if(table != null)
+                    root.fetch(table, JoinType.LEFT);
             }
             ((CriteriaQuery<Object>) cq).select(root);
         }

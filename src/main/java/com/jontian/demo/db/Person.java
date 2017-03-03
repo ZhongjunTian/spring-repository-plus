@@ -1,5 +1,6 @@
 package com.jontian.demo.db;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -19,7 +20,8 @@ public class Person {
     @JsonProperty(access = Access.WRITE_ONLY)
     private Long addressId;
 
-    @OneToOne
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "addressId", insertable = false, updatable = false)
     private Address address;
 
@@ -54,4 +56,5 @@ public class Person {
     public void setAddress(Address address) {
         this.address = address;
     }
+
 }
