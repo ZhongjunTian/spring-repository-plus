@@ -11,9 +11,6 @@ List<Person> persons = select(Person.class).from(personRepository).where("lastNa
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
 
- Supported logic operator:<br />
- "and" "or"<br />
- 
 <h2>User guide</h2>
 <h3>1. clone and run</h3>
 
