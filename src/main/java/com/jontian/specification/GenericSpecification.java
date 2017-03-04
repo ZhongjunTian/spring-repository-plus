@@ -26,6 +26,7 @@ public class GenericSpecification implements Specification<Object> {
         this.joinFetchTables = joinFetchTables;
         this.filter = filter;
     }
+
     public GenericSpecification(Filter filter, String... joinFetchTables) {
         if(joinFetchTables != null)
             for(String table : joinFetchTables){
