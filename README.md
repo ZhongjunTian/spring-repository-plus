@@ -1,3 +1,4 @@
+
 # Spring-Repository-Specification
 
 A easy way to extend Spring Boot and Hibernate to have high performance, high flexibility and JOOQ functional style code
@@ -6,18 +7,18 @@ Pros:
 
 1. Programmally filter data in simple code,<br />
 
-     List persons = select(Person.class).from(personRepository).findAll();
+    List persons = select(Person.class).from(personRepository).findAll();<br />
      
-     List persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();
+     List persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();<br />
      
-     List persons = select(Person.class).from(personRepository).leftJoin("address").findAll();
+     List persons = select(Person.class).from(personRepository).leftJoin("address").findAll();<br />
      
-     Page persons = select(Person.class).from(personRepository).findPage();
+     Page persons = select(Person.class).from(personRepository).findPage();<br />
     
-    List persons = select(Person.class)
-                .from(personRepository)
-                .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")
-                .findAll();
+     List persons = select(Person.class)<br />
+             &nbsp;&nbsp;&nbsp;&nbsp; .from(personRepository)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp; .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")<br />
+             &nbsp;&nbsp;&nbsp;&nbsp;  .findAll();<br />
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
 
@@ -39,4 +40,3 @@ Then look back at application's console, Hibernate will print out executed query
 <h4>2.2 advanced example</h4><br />
 open url <br />
 <a href="http://localhost:8080/join"><b>http://localhost:8080/join</b></a><br />
-
