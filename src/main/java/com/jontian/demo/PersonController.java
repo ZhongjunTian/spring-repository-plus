@@ -36,11 +36,11 @@ public class PersonController {
     }
 
     @GetMapping("/lambda")
-    public Page<Person> lambda() throws Exception {
+    public List<Person> lambda() throws Exception {
         return select(Person.class)
                 .from(personRepository)
                 .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")
-                .findPage(null);
+                .findAll();
     }
 
     @GetMapping("/oldWay")
