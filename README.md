@@ -14,6 +14,10 @@ Pros:
      
      Page persons = select(Person.class).from(personRepository).findPage();
     
+    List persons = select(Person.class)
+                .from(personRepository)
+                .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")
+                .findAll();
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
 
