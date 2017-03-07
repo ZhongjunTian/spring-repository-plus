@@ -41,8 +41,12 @@ public class PersonController {
 
     @GetMapping("/lambda")
     public List<Person> lambda() {
-        return selectFrom(personRepository).leftJoin(p -> p.getAddress()).where((p -> p.getAddress().getCity()), EQUAL, "Dallas").findAll();
+        return selectFrom(personRepository)
+                .leftJoin(p -> p.getAddress())
+                .where((p -> p.getAddress().getCity()), EQUAL, "Dallas")
+                .findAll();
     }
+
     @PostMapping("/filter")
     public List<Person> filter(@RequestBody Filter filter){
         return selectFrom(personRepository).where(filter).findAll();
