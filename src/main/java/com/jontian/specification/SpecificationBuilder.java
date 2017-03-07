@@ -61,7 +61,13 @@ public class SpecificationBuilder<T> {
     }
 
     public SpecificationBuilder<T> where(Function<T,?> getter, String operator, Object value) {
-        StackTraceElement elementWhichCallsThisMethod = Thread.currentThread().getStackTrace()[2];
+        String attributePath = getPathFromCallStack();
+        where(attributePath, operator,value);
+        return this;
+    }
+
+    private String getPathFromCallStack() {
+        StackTraceElement elementWhichCallsThisMethod = Thread.currentThread().getStackTrace()[3];
         int lineNumberInUpperLevelClass = elementWhichCallsThisMethod.getLineNumber();
         List<String> getterNames = Collections.emptyList();
         try {
@@ -74,9 +80,7 @@ public class SpecificationBuilder<T> {
             e.printStackTrace();
         }
         logger.info("Found getter in lambda expression: "+getterNames.toString());
-        String attributePath = toAttributePath(getterNames);
-        where(attributePath, operator,value);
-        return this;
+        return toAttributePath(getterNames);
     }
 
     private String toAttributePath(List<String> getterNames) {

@@ -21,7 +21,7 @@ import java.util.List;
  * Created by zhongjun on 3/4/17.
  */
 public class BytecodeUtil {
-    public static List<String> getMethodNameInLambdaFromBytecode(String classPath, int lineNumberInUpperLevelClass) throws NotFoundException, IOException, CannotCompileException {
+    protected static List<String> getMethodNameInLambdaFromBytecode(String classPath, int lineNumberInUpperLevelClass) throws NotFoundException, IOException, CannotCompileException {
         ClassPool pool = ClassPool.getDefault();
         CtClass pt = pool.get(classPath);
         byte[] bytecode = pt.toBytecode();
@@ -59,7 +59,7 @@ public class BytecodeUtil {
 
     private static Printer printer = new Textifier();
     private static TraceMethodVisitor mp = new TraceMethodVisitor(printer);
-    public static String insnToString(AbstractInsnNode insn){
+    protected static String insnToString(AbstractInsnNode insn){
         insn.accept(mp);
         StringWriter sw = new StringWriter();
         printer.print(new PrintWriter(sw));
