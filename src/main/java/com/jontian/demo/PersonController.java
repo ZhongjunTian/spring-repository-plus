@@ -20,7 +20,7 @@ public class PersonController {
     @Autowired
     PersonRepository personRepository;
 
-    @GetMapping("/")
+    @GetMapping("/person")
     public List<Person> simple(){
         return select(Person.class).from(personRepository).findAll();
     }
