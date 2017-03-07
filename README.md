@@ -7,16 +7,15 @@ Pros:
 
 1. Programmally filter data in simple code,<br />
 
-    List persons = select(Person.class).from(personRepository).findAll();<br />
+    List persons = selectFrom(personRepository).findAll();<br />
      
-     List persons = select(Person.class).from(personRepository).where("lastName", EQUAL, "Tian").findAll();<br />
+     List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();<br />
      
-     List persons = select(Person.class).from(personRepository).leftJoin("address").findAll();<br />
+     List persons = selectFrom(personRepository).leftJoin("address").findAll();<br />
      
-     Page persons = select(Person.class).from(personRepository).findPage();<br />
+     Page persons = selectFrom(personRepository).findPage();<br />
     
-     List persons = select(Person.class)<br />
-             &nbsp;&nbsp;&nbsp;&nbsp; .from(personRepository)<br />
+     List persons = selectFrom(personRepository)<br />
             &nbsp;&nbsp;&nbsp;&nbsp; .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")<br />
              &nbsp;&nbsp;&nbsp;&nbsp;  .findAll();<br />
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
