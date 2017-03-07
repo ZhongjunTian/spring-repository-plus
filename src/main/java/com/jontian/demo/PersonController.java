@@ -2,6 +2,7 @@ package com.jontian.demo;
 
 import com.jontian.demo.db.Person;
 import com.jontian.demo.db.PersonRepository;
+import com.jontian.specification.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.hateoas.PagedResources;
 //import org.springframework.hateoas.core.EmbeddedWrapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -42,8 +44,8 @@ public class PersonController {
         return selectFrom(personRepository).leftJoin(p -> p.getAddress()).where((p -> p.getAddress().getCity()), EQUAL, "Dallas").findAll();
     }
     @PostMapping("/filter")
-    public List<Person> filter(){
-        throw new NotImplementedException();
+    public List<Person> filter(@RequestBody Filter filter){
+        return selectFrom(personRepository).where(filter).findAll();
     }
 
 

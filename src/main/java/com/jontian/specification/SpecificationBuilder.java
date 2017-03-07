@@ -50,25 +50,29 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
-    public SpecificationBuilder<T> where(String field, String operator, Object value){
-        if(repository == null){
-            throw new IllegalStateException("Did not specify which repository, please use from() before where()");
-        }
-        if(filter != null){
-            throw new IllegalStateException("Cannot use where() twice");
-        }
-        filter = new Filter(field, operator, value);
-        return this;
-    }
-
     public SpecificationBuilder<T> leftJoin(Function<T,?> getter){
         String attributePath = getPathFromCallStack();
         return this.leftJoin(attributePath);
     }
 
+    public SpecificationBuilder<T> where(String field, String operator, Object value){
+        return where(new Filter(field, operator, value));
+    }
+
+    public SpecificationBuilder<T> where(Filter filter){
+        if(this.repository == null){
+            throw new IllegalStateException("Did not specify which repository, please use from() before where()");
+        }
+        if(this.filter != null){
+            throw new IllegalStateException("Cannot use where() twice");
+        }
+        this.filter = filter;
+        return this;
+    }
+
     public SpecificationBuilder<T> where(Function<T,?> getter, String operator, Object value) {
         String attributePath = getPathFromCallStack();
-        where(attributePath, operator,value);
+        where(new Filter(attributePath, operator,value));
         return this;
     }
 
