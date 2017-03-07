@@ -11,22 +11,6 @@ import java.util.List;
 
 
 class GenericFilterFactory {
-    protected static final String EQUAL = "eq";
-    protected static final String NOT_EQUAL = "neq";
-    protected static final String EMPTY_OR_NULL = "isnull";
-    protected static final String NOT_EMPTY_AND_NOT_NULL = "isnotnull";
-
-    protected static final String CONTAINS = "contains";
-    protected static final String NOT_CONTAINS = "doesnotcontain";
-    protected static final String START_WITH = "startswith";
-    protected static final String END_WITH = "endswith";
-
-    protected static final String GREATER_THAN = "gt";
-    protected static final String LESS_THAN = "lt";
-    protected static final String GREATER_THAN_OR_EQUAL = "gte";
-    protected static final String LESS_THAN_OR_EQUAL = "lte";
-    protected static final String PATH_DELIMITER = ".";
-
     protected static final String[] BASE_OPERATOR_COLLECTION = {"{", "}"};
     protected static final String AND_DELIMITER = ",";
 

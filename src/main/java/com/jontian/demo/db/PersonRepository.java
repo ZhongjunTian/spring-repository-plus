@@ -11,7 +11,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface PersonRepository extends JpaRepository<Person, Long>,JpaSpecificationExecutor {
 
-    List<Person> findByLastName(@Param("name") String name);
-    Page<Person> findByLastName(@Param("name") String name, Pageable page);
 
 }

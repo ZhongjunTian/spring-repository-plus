@@ -78,7 +78,7 @@ public class Filter {
 
     @Override
     public String toString(){
-        //TODO
+        //TODO to String
        return "";
     }
 }

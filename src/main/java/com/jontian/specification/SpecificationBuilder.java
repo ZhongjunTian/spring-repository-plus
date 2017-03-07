@@ -20,10 +20,12 @@ import java.util.function.Function;
  */
 public class SpecificationBuilder<T> {
     private static Logger logger = LoggerFactory.getLogger(SpecificationBuilder.class);
-    public static <T> SpecificationBuilder<T> select(Class<T> clazz){
-        return new SpecificationBuilder<T>();
-    }
 
+    public static <T, T2 extends JpaRepository<T,?> & JpaSpecificationExecutor > SpecificationBuilder<T>
+        selectFrom(T2 repository){
+        return new SpecificationBuilder<T>(repository);
+    }
+    private BytecodeUtil bytecodeUtil;
     private JpaSpecificationExecutor repository;
     private List<String> leftJoinTable;
     //TODO private List<String> innerJoinTable;
@@ -34,11 +36,10 @@ public class SpecificationBuilder<T> {
     private static int LAST_STATE_JOIN = 2;
     private static int LAST_STATE_WHERE = 3;
 
-    public <T2 extends JpaSpecificationExecutor & JpaRepository<T,?>>
-    SpecificationBuilder<T> from(T2 repository){
+    public SpecificationBuilder(JpaSpecificationExecutor repository){
         this.repository = repository;
+        this.bytecodeUtil = new BytecodeUtil();
         leftJoinTable = new ArrayList<>();
-        return this;
     }
 
     public SpecificationBuilder<T> leftJoin(String... tables){
@@ -60,6 +61,11 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
+    public SpecificationBuilder<T> leftJoin(Function<T,?> getter){
+        String attributePath = getPathFromCallStack();
+        return this.leftJoin(attributePath);
+    }
+
     public SpecificationBuilder<T> where(Function<T,?> getter, String operator, Object value) {
         String attributePath = getPathFromCallStack();
         where(attributePath, operator,value);
@@ -71,7 +77,7 @@ public class SpecificationBuilder<T> {
         int lineNumberInUpperLevelClass = elementWhichCallsThisMethod.getLineNumber();
         List<String> getterNames = Collections.emptyList();
         try {
-            getterNames = BytecodeUtil.getMethodNameInLambdaFromBytecode(elementWhichCallsThisMethod.getClassName(),lineNumberInUpperLevelClass);
+            getterNames = bytecodeUtil.getMethodNameInLambdaFromBytecode(elementWhichCallsThisMethod.getClassName(),lineNumberInUpperLevelClass);
         } catch (NotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -97,16 +103,14 @@ public class SpecificationBuilder<T> {
     }
 
     public List<T> findAll(){
-        //TODO
-        return repository.findAll(new GenericSpecification(filter, leftJoinTable));
+        return repository.findAll(new SpecificationImpl(filter, leftJoinTable));
     }
 
     public Page<T> findPage(Pageable page){
-        //TODO
-        return repository.findAll(new GenericSpecification(filter, leftJoinTable), page);
+        return repository.findAll(new SpecificationImpl(filter, leftJoinTable), page);
     }
 
-    //TODO
+    //TODO and and or Builder
     // <T extends Appendable & Closeable>
     public SpecificationBuilder and(String field, String operator, Object value) {
         throw new NotImplementedException();
@@ -115,10 +119,5 @@ public class SpecificationBuilder<T> {
     public SpecificationBuilder or(String field, String operator, Object value) {
         throw new NotImplementedException();
     }
-
-    public Filter build() {
-        throw new NotImplementedException();
-    }
-
 
 }
