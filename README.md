@@ -1,5 +1,5 @@
 
-# Spring-Repository-Specification
+# spring-repository-plus
 
 A easy way to extend Spring Boot and Hibernate to have high performance, high flexibility and JOOQ functional style code
 
