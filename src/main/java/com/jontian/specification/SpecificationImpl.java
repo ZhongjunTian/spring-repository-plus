@@ -7,7 +7,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,6 +16,8 @@ public class SpecificationImpl implements Specification<Object> {
     private static final Logger logger = LoggerFactory.getLogger(SpecificationImpl.class);
     private Filter filter;
     private List<String> leftJoinFetchTables;
+    private List<String> rightJoinFetchTables;
+    private List<String> innerJoinFetchTables;
 
     public SpecificationImpl(Filter filter) {
         this.filter = filter;
@@ -80,10 +81,10 @@ public class SpecificationImpl implements Specification<Object> {
             Predicate p = getSinglePredicateByPath(filter, root, cb);
             return p;
         } else {//logic filters
-            if (filter.getLogic().equals(LOGIC_AND)) {
+            if (filter.getLogic().equals(AND)) {
                 Predicate[] predicates = getPredicateList(filter, root, cb);
                 return cb.and(predicates);
-            } else if (filter.getLogic().equals(LOGIC_OR)) {
+            } else if (filter.getLogic().equals(OR)) {
                 Predicate[] predicates = getPredicateList(filter, root, cb);
                 return cb.or(predicates);
             } else {
@@ -141,11 +142,11 @@ public class SpecificationImpl implements Specification<Object> {
                 Operator for String/Number/Date/Boolean
              */
             case EQUAL:
-                assertNumberOrStringOrBoolean(value);
+//                assertNumberOrStringOrBoolean(value);
                 p = cb.equal(path, (value));
                 break;
             case NOT_EQUAL:
-                assertNumberOrStringOrBoolean(value);
+//                assertNumberOrStringOrBoolean(value);
                 p = cb.notEqual(path, (value));
                 break;
             /*
@@ -153,12 +154,12 @@ public class SpecificationImpl implements Specification<Object> {
              */
             case EMPTY_OR_NULL:
                 p = cb.isNull(path);
-                if (entityType.equals(String.class) || entityType.equals(Date.class))
+//                if (entityType.equals(String.class) || entityType.equals(Date.class))
                     p = cb.or(p, cb.equal(path, ""));
                 break;
             case NOT_EMPTY_AND_NOT_NULL:
                 p = cb.isNotNull(path);
-                if (entityType.equals(String.class) || entityType.equals(Date.class))
+//                if (entityType.equals(String.class) || entityType.equals(Date.class))
                     p = cb.and(p, cb.notEqual(path, ""));
                 break;
             /*
@@ -184,19 +185,19 @@ public class SpecificationImpl implements Specification<Object> {
                 Operator for Number/Date
              */
             case GREATER_THAN:
-                assertNumberOrString(value);
+//                assertNumberOrString(value);
                 p = cb.greaterThan(path, String.valueOf(value));
                 break;
             case GREATER_THAN_OR_EQUAL:
-                assertNumberOrString(value);
+//                assertNumberOrString(value);
                 p = cb.greaterThanOrEqualTo(path, String.valueOf(value));
                 break;
             case LESS_THAN:
-                assertNumberOrString(value);
+//                assertNumberOrString(value);
                 p = cb.lessThan(path, String.valueOf(value));
                 break;
             case LESS_THAN_OR_EQUAL:
-                assertNumberOrString(value);
+//                assertNumberOrString(value);
                 p = cb.lessThanOrEqualTo(path, String.valueOf(value));
                 break;
             case IN:

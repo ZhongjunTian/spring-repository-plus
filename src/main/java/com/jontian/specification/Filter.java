@@ -25,8 +25,8 @@ public class Filter {
     String field;
     String operator;
     Object value;
-    public static final String LOGIC_AND ="and";
-    public static final String LOGIC_OR ="or";
+    public static final String AND ="and";
+    public static final String OR ="or";
     String logic;
     List<Filter> filters;
     public Filter(){}

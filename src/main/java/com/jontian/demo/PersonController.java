@@ -47,6 +47,13 @@ public class PersonController {
                 .findAll();
     }
 
+    @GetMapping("/complexQuery")
+    public List<Person> complexQuery() {
+        return selectFrom(personRepository)
+                .where((p -> p.getAddress().getCity()), EQUAL, "Dallas")
+                .findAll();
+    }
+
     @PostMapping("/filter")
     public List<Person> filter(@RequestBody Filter filter){
         return selectFrom(personRepository).where(filter).findAll();

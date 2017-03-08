@@ -25,7 +25,7 @@ public class SpecificationBuilder<T> {
         selectFrom(T2 repository){
         return new SpecificationBuilder<T>(repository);
     }
-    private BytecodeUtil bytecodeUtil;
+    private BytecodeParser bytecodeParser;
     private JpaSpecificationExecutor repository;
     private List<String> leftJoinTable;
     //TODO private List<String> innerJoinTable;
@@ -38,7 +38,7 @@ public class SpecificationBuilder<T> {
 
     public SpecificationBuilder(JpaSpecificationExecutor repository){
         this.repository = repository;
-        this.bytecodeUtil = new BytecodeUtil();
+        this.bytecodeParser = new BytecodeParser();
         leftJoinTable = new ArrayList<>();
     }
 
@@ -51,7 +51,7 @@ public class SpecificationBuilder<T> {
     }
 
     public SpecificationBuilder<T> leftJoin(Function<T,?> getter){
-        String attributePath = getPathFromCallStack();
+        String attributePath = bytecodeParser.getPathFromCallStack();
         return this.leftJoin(attributePath);
     }
 
@@ -71,40 +71,12 @@ public class SpecificationBuilder<T> {
     }
 
     public SpecificationBuilder<T> where(Function<T,?> getter, String operator, Object value) {
-        String attributePath = getPathFromCallStack();
+        String attributePath = bytecodeParser.getPathFromCallStack();
         where(new Filter(attributePath, operator,value));
         return this;
     }
 
-    private String getPathFromCallStack() {
-        StackTraceElement elementWhichCallsThisMethod = Thread.currentThread().getStackTrace()[3];
-        int lineNumberInUpperLevelClass = elementWhichCallsThisMethod.getLineNumber();
-        List<String> getterNames = Collections.emptyList();
-        try {
-            getterNames = bytecodeUtil.getMethodNameInLambdaFromBytecode(elementWhichCallsThisMethod.getClassName(),lineNumberInUpperLevelClass);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CannotCompileException e) {
-            e.printStackTrace();
-        }
-        logger.info("Found getter in lambda expression: "+getterNames.toString());
-        return toAttributePath(getterNames);
-    }
 
-    private String toAttributePath(List<String> getterNames) {
-        StringBuilder sb = new StringBuilder();
-        for(String getterName : getterNames) {
-            if (!getterName.startsWith("get")) {
-                throw new IllegalStateException();
-            }
-            String attributeName = getterName.substring(3);
-            attributeName = Character.toLowerCase(attributeName.charAt(0)) + attributeName.substring(1);
-            sb.append(Filter.PATH_DELIMITER+attributeName);
-        }
-        return sb.toString().substring(Filter.PATH_DELIMITER.length());
-    }
 
     public List<T> findAll(){
         return repository.findAll(new SpecificationImpl(filter, leftJoinTable));
