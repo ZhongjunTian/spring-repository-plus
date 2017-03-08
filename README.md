@@ -24,7 +24,7 @@ Pros:
 <h2>User guide</h2>
 <h3>1. clone and run</h3>
 
-git clone https://github.com/ZhongjunTian/Spring-Repository-Specification.git <br />
+git clone https://github.com/ZhongjunTian/Spring-Repository-Plus.git <br />
 cd Spring-Repository-Specification<br />
 mvn spring-boot:run
 
