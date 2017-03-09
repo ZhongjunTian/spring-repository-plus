@@ -7,17 +7,42 @@ Pros:
 
 1. Programmally filter data in simple code,<br />
 
-    List persons = selectFrom(personRepository).findAll();<br />
-     
-     List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();<br />
-     
-     List persons = selectFrom(personRepository).leftJoin("address").findAll();<br />
-     
-     Page persons = selectFrom(personRepository).findPage();<br />
-    
-     List persons = selectFrom(personRepository)<br />
-            &nbsp;&nbsp;&nbsp;&nbsp; .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")<br />
-             &nbsp;&nbsp;&nbsp;&nbsp;  .findAll();<br />
+```JAVA
+     List persons = selectFrom(personRepository).findAll();
+     List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();
+     List persons = selectFrom(personRepository).leftJoin("address").findAll();
+     Page persons = selectFrom(personRepository).findPage();
+     List persons = selectFrom(personRepository)
+          .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")
+         .findAll();
+```
+Querying with JOOQ is as simple as this : 
+
+```JAVA
+  Book b = BOOK.as("b");
+        Author a = AUTHOR.as("a");
+        BookStore s = BOOK_STORE.as("s");
+        BookToBookStore t = BOOK_TO_BOOK_STORE.as("t");
+
+        Result<Record3<String, String, Integer>> result =
+        create.select(a.FIRST_NAME, a.LAST_NAME, countDistinct(s.NAME))
+              .from(a)
+              .join(b).on(b.AUTHOR_ID.equal(a.ID))
+              .join(t).on(t.BOOK_ID.equal(b.ID))
+              .join(s).on(t.BOOK_STORE_NAME.equal(s.NAME))
+              .groupBy(a.FIRST_NAME, a.LAST_NAME)
+              .fetch();
+```
+Querying with Querydsl JPA is as simple as this :
+
+```JAVA
+QCustomer customer = QCustomer.customer;
+JPAQuery<?> query = new JPAQuery<Void>(entityManager);
+Customer bob = query.select(customer)
+  .from(customer)
+  .where(customer.firstName.eq("Bob"))
+  .fetchOne();
+```
 2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
 3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
 
