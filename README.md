@@ -12,11 +12,6 @@ Querying with spring-repository-plus is as simple as:
 
 ```JAVA
      List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();
-     List persons = selectFrom(personRepository).leftJoin("address").findAll();
-     Page persons = selectFrom(personRepository).findPage(page);
-     List persons = selectFrom(personRepository)
-          .where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
-          .findAll();
 ```
 Querying with JOOQ is as simple as this : 
 
@@ -47,20 +42,18 @@ Customer bob = query.select(customer)
 ```
 
 <h2>User guide</h2>
-<h3>1. clone and run</h3>
+<h3>clone and run</h3>
 
 git clone https://github.com/ZhongjunTian/spring-repository-plus.git <br />
 cd spring-repository-plus<br />
 mvn spring-boot:run
 
-<h3>2. open example url</h3>
 
-<h4>2.1 simple example</h4><br />
-open url <br />
-<a href="http://localhost:8080/"><b>http://localhost:8080/</b></a><br />
-
-Then look back at application's console, Hibernate will print out executed query
-
-<h4>2.2 advanced example</h4><br />
-open url <br />
-<a href="http://localhost:8080/join"><b>http://localhost:8080/join</b></a><br />
+Other example code:
+```Java
+     List persons = selectFrom(personRepository).leftJoin("address").findAll();
+     Page persons = selectFrom(personRepository).findPage(page);
+     List persons = selectFrom(personRepository)
+          .where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
+          .findAll();
+```
