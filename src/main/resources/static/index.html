@@ -1,1 +1,46 @@
-<h1> hello </h>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Spring Repository Specification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="./js/angular.min.js"></script>
+    <script src="./js/angular-route.min.js">
+    </script>
+    <script src="./js/app.js"></script>
+</head>
+
+<body ng-app="myApp">
+    <div class="container-fluid">
+        <nav class="navbar navbar-default">
+            <div class="navbar-header">
+                <a class="navbar-brand">Tian's App</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="#join">join</a>
+                </li>
+                <li>
+                    <a href="#filt">Filter</a>
+                </li>
+                <li>
+                    <a href="">####</a>
+                </li>
+            </ul>
+
+        </nav>
+        <h1>Tian's App</h1>
+        <hr>
+        <div class="row" ng-view>
+
+        </div>
+    </div>
+</body>
+
+</html>
