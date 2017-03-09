@@ -16,7 +16,7 @@ Querying with spring-repository-plus is as simple as:
      Page persons = selectFrom(personRepository).findPage(page);
      List persons = selectFrom(personRepository)
           .where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
-         .findAll();
+          .findAll();
 ```
 Querying with JOOQ is as simple as this : 
 
