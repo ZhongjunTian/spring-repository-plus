@@ -4,16 +4,17 @@
 A easy way to extend Spring Boot and Hibernate to have high performance, high flexibility and JOOQ functional style code
 
 Pros:
+DON'T have to generate code,
+JUST copy 5 classes to your project.
 
-1. Programmally filter data in simple code,<br />
+Querying with spring-repository-plus is as simple as:
 
 ```JAVA
-     List persons = selectFrom(personRepository).findAll();
-     List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();
      List persons = selectFrom(personRepository).leftJoin("address").findAll();
-     Page persons = selectFrom(personRepository).findPage();
+     List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();
+     Page persons = selectFrom(personRepository).findPage(page);
      List persons = selectFrom(personRepository)
-          .where((person -> person.getAddress().getCity()), EQUAL, "Dallas")
+          .where((person -> person.getAddress().getCity()), EQUAL, "Dallas") //refactory friendly feature :)
          .findAll();
 ```
 Querying with JOOQ is as simple as this : 
