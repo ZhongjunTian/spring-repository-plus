@@ -15,7 +15,7 @@ Querying with spring-repository-plus is as simple as:
      List persons = selectFrom(personRepository).where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
                    .findAll();
 ```
-Comparing to querying with JOOQ is as simple as this : 
+Comparing to querying with JOOQ : 
 
 ```JAVA
   Book b = BOOK.as("b");
@@ -32,7 +32,7 @@ Comparing to querying with JOOQ is as simple as this :
               .groupBy(a.FIRST_NAME, a.LAST_NAME)
               .fetch();
 ```
-Comparing to querying with Querydsl JPA is as simple as this :
+Comparing to querying with Querydsl JPA  :
 
 ```JAVA
 QCustomer customer = QCustomer.customer;
