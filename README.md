@@ -1,7 +1,7 @@
 
 # spring-repository-plus
 
-A easy way to extend Spring Boot and Hibernate to have high performance, high flexibility and JOOQ functional style code
+A easy way to extend Spring Boot and Hibernate
 
 Pros:
 
@@ -15,7 +15,7 @@ Querying with spring-repository-plus is as simple as:
      List persons = selectFrom(personRepository).where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
                    .findAll();
 ```
-Querying with JOOQ is as simple as this : 
+Comparing to querying with JOOQ is as simple as this : 
 
 ```JAVA
   Book b = BOOK.as("b");
@@ -32,7 +32,7 @@ Querying with JOOQ is as simple as this :
               .groupBy(a.FIRST_NAME, a.LAST_NAME)
               .fetch();
 ```
-Querying with Querydsl JPA is as simple as this :
+Comparing to querying with Querydsl JPA is as simple as this :
 
 ```JAVA
 QCustomer customer = QCustomer.customer;
