@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.hateoas.core.EmbeddedWrapper;
 //import org.springframework.hateoas.core.EmbeddedWrappers;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
@@ -20,6 +17,7 @@ import static com.jontian.specification.Filter.*;
 import static com.jontian.specification.SpecificationBuilder.selectFrom;
 
 @RestController
+@CrossOrigin("*")
 public class PersonController {
     @Autowired
     PersonRepository personRepository;
