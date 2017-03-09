@@ -12,6 +12,8 @@ Querying with spring-repository-plus is as simple as:
 
 ```JAVA
      List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();
+     List persons = selectFrom(personRepository).where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
+                   .findAll();
 ```
 Querying with JOOQ is as simple as this : 
 
@@ -53,7 +55,4 @@ Other example code:
 ```Java
      List persons = selectFrom(personRepository).leftJoin("address").findAll();
      Page persons = selectFrom(personRepository).findPage(page);
-     List persons = selectFrom(personRepository)
-          .where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
-          .findAll();
 ```
