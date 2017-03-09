@@ -4,8 +4,9 @@
 A easy way to extend Spring Boot and Hibernate to have high performance, high flexibility and JOOQ functional style code
 
 Pros:
-DON'T have to generate code,
-JUST copy 5 classes to your project.
+
+DO NOT have to use maven to generate code, <br />
+JUST copy 5 classes to your project, then you are ready to go <br />
 
 Querying with spring-repository-plus is as simple as:
 
@@ -44,8 +45,6 @@ Customer bob = query.select(customer)
   .where(customer.firstName.eq("Bob"))
   .fetchOne();
 ```
-2. don't have to predefine ignoring findByXXXXXXXXXXXXXXXXXXXXXX() in Repository <br />
-3. Join Fetch table without writing Hibernate HQL, which gives us high performance<br />
 
 <h2>User guide</h2>
 <h3>1. clone and run</h3>
