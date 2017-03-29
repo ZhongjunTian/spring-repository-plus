@@ -92,8 +92,7 @@ public class SpecificationImpl implements Specification<Object> {
     }
 
     private Predicate getPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
-        if (filter == null ||
-                (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null))
+        if (validFilter(filter))
             return null;
         if (filter.getLogic() == null) {//one filter
             Predicate p = getSinglePredicateByPath(filter, root, cb);
@@ -109,6 +108,11 @@ public class SpecificationImpl implements Specification<Object> {
                 throw new SpecificationException("Unknown filter logic" + filter.getLogic());
             }
         }
+    }
+
+    private boolean validFilter(Filter filter) {
+        return filter == null ||
+                (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null);
     }
 
     private Predicate[] getPredicateList(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {

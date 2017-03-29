@@ -41,14 +41,13 @@ public class PersonController {
     public List<Person> lambda() {
         return selectFrom(personRepository)
                 .leftJoin(p -> p.getAddress())
-                .where((p -> p.getAddress().getCity()), EQUAL, "Dallas")
-                .findAll();
+                .where((p -> p.getAddress().getCity())).equal("Dallas").findAll();
     }
 
     @GetMapping("/complexQuery")
     public List<Person> complexQuery() {
         return selectFrom(personRepository)
-                .where((p -> p.getAddress().getCity()), EQUAL, "Dallas")
+                .where((p -> p.getAddress().getCity())).equal("Dallas")
                 .findAll();
     }
 
