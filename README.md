@@ -11,8 +11,8 @@ JUST copy 5 classes to your project, then you are ready to go <br />
 Querying with spring-repository-plus is as simple as:
 
 ```JAVA
-     List persons = selectFrom(personRepository).where("lastName", EQUAL, "Tian").findAll();
-     List persons = selectFrom(personRepository).where((person -> person.getLastName()), EQUAL, "Tian") //refactory friendly feature :)
+     List persons = selectFrom(personRepository).where("lastName").equal("Tian").findAll();
+     List persons = selectFrom(personRepository).where((person -> person.getLastName())).equal("Tian") //refactory friendly feature :)
                    .findAll();
 ```
 Comparing to querying with JOOQ : 
