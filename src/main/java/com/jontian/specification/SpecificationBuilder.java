@@ -40,8 +40,9 @@ public class SpecificationBuilder<T> {
     //TODO private List<String> rightJoinTable;
     private Filter filter;
 
-    public static <T, T2 extends JpaRepository<T,?> & JpaSpecificationExecutor > SpecificationBuilder<T> selectFrom(T2 repository){
-        SpecificationBuilder<T> builder = new SpecificationBuilder<>();
+    public static <ENTITY, REPO extends JpaRepository<ENTITY,?> & JpaSpecificationExecutor>
+    SpecificationBuilder<ENTITY> selectFrom(REPO repository){
+        SpecificationBuilder<ENTITY> builder = new SpecificationBuilder<>();
         builder.repository = repository;
         builder.bytecodeParser = new BytecodeParser();
         builder.leftJoinTable = new ArrayList<>();
@@ -57,7 +58,7 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
-    public SpecificationBuilder<T> leftJoin(Function<T,?> getter){
+    public <R> SpecificationBuilder<T> leftJoin(Function<T,R> getter){
         String attributePath = bytecodeParser.getPathFromCallStack();
         return this.leftJoin(attributePath);
     }
@@ -67,7 +68,7 @@ public class SpecificationBuilder<T> {
         return where(new Filter(field, operator, value));
     }
 
-    public SpecificationBuilder<T> where(Function<T,?> getter, String operator, Object value) {
+    public <R> SpecificationBuilder<T> where(Function<T,R> getter, String operator, Object value) {
         String attributePath = bytecodeParser.getPathFromCallStack();
         where(new Filter(attributePath, operator,value));
         return this;
@@ -84,13 +85,10 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
-    public SpecificationWhereClauseBuilder where(Function<T,?> getter){
+    public <R> SpecificationWhereClauseBuilder where(Function<T,R> getter){
         String attributePath = bytecodeParser.getPathFromCallStack();
         return new SpecificationWhereClauseBuilder(attributePath, this);
     }
-
-
-
 
     public List<T> findAll(){
         return repository.findAll(new SpecificationImpl(filter, leftJoinTable));

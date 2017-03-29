@@ -22,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class SpecificationImpl implements Specification<Object> {
 
     private Predicate getSinglePredicateByPath(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
         String field = filter.getField();
-        Path<String> path = null;
+        Path<Object> path = null;
         try {
             path = parsePath(root, field);
         } catch (Exception e) {
@@ -155,8 +156,8 @@ public class SpecificationImpl implements Specification<Object> {
         return cq.getResultType().toString().contains("java.lang.Long");
     }
 
-    private Predicate getSinglePredicateByPath(CriteriaBuilder cb, Path<String> path, String operator, Object value) throws SpecificationException {
-        Class<? extends String> entityType = path.getJavaType();
+    private Predicate getSinglePredicateByPath(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
+        Class<? extends Object> entityType = path.getJavaType();
         Predicate p = null;
 
         switch (operator) {
@@ -172,55 +173,65 @@ public class SpecificationImpl implements Specification<Object> {
                 p = cb.notEqual(path, (value));
                 break;
             /*
-                Operator for String/Date
+                Operator for String/Date/Boolean/Number
              */
             case EMPTY_OR_NULL:
                 p = cb.isNull(path);
-//                if (entityType.equals(String.class) || entityType.equals(Date.class))
-                    p = cb.or(p, cb.equal(path, ""));
+                p = cb.or(p, cb.equal(path, ""));
                 break;
             case NOT_EMPTY_AND_NOT_NULL:
                 p = cb.isNotNull(path);
-//                if (entityType.equals(String.class) || entityType.equals(Date.class))
-                    p = cb.and(p, cb.notEqual(path, ""));
+                p = cb.and(p, cb.notEqual(path, ""));
                 break;
             /*
                 Operator for String
              */
             case CONTAINS:
-                assertString(value);
-                p = cb.like(path, "%" + String.valueOf(value) + "%");
+                //assertString(value);
+                p = cb.like(path.as(String.class), "%" + String.valueOf(value) + "%");
                 break;
             case NOT_CONTAINS:
-                assertString(value);
-                p = cb.notLike(path, "%" + String.valueOf(value) + "%");
+                //assertString(value);
+                p = cb.notLike(path.as(String.class), "%" + String.valueOf(value) + "%");
                 break;
             case START_WITH:
-                assertString(value);
-                p = cb.like(path, String.valueOf(value) + "%");
+                //assertString(value);
+                p = cb.like(path.as(String.class), String.valueOf(value) + "%");
                 break;
             case END_WITH:
-                assertString(value);
-                p = cb.like(path, "%" + String.valueOf(value));
+                //assertString(value);
+                p = cb.like(path.as(String.class), "%" + String.valueOf(value));
                 break;
             /*
                 Operator for Number/Date
              */
             case GREATER_THAN:
-//                assertNumberOrString(value);
-                p = cb.greaterThan(path, String.valueOf(value));
+                if(value instanceof Date){
+                    p = cb.greaterThan(path.as(Date.class), (Date)(value));
+                }else {
+                    p = cb.greaterThan(path.as(String.class), (value).toString());
+                }
                 break;
             case GREATER_THAN_OR_EQUAL:
-//                assertNumberOrString(value);
-                p = cb.greaterThanOrEqualTo(path, String.valueOf(value));
+                if(value instanceof Date){
+                    p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date)(value));
+                }else {
+                    p = cb.greaterThanOrEqualTo(path.as(String.class), (value).toString());
+                }
                 break;
             case LESS_THAN:
-//                assertNumberOrString(value);
-                p = cb.lessThan(path, String.valueOf(value));
+                if(value instanceof Date){
+                    p = cb.lessThan(path.as(Date.class), (Date)(value));
+                }else {
+                    p = cb.lessThan(path.as(String.class), (value).toString());
+                }
                 break;
             case LESS_THAN_OR_EQUAL:
-//                assertNumberOrString(value);
-                p = cb.lessThanOrEqualTo(path, String.valueOf(value));
+                if(value instanceof Date){
+                    p = cb.lessThanOrEqualTo(path.as(Date.class), (Date)(value));
+                }else {
+                    p = cb.lessThanOrEqualTo(path.as(String.class), (value).toString());
+                }
                 break;
             case IN:
                 if (assertCollection(value)) {
@@ -267,9 +278,9 @@ public class SpecificationImpl implements Specification<Object> {
         throw new SpecificationException("cannot cast " + value + " to String");
     }
 
-    private Path<String> parsePath(Path<? extends Object> root, String field) {
+    private Path<Object> parsePath(Path<? extends Object> root, String field) {
         if (!field.contains(PATH_DELIMITER)) {
-            return root.<String>get(field);
+            return root.get(field);
         }
         int i = field.indexOf(PATH_DELIMITER);
         String firstPart = field.substring(0, i);
