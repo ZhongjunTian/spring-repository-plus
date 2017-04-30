@@ -12,8 +12,8 @@ Querying with spring-repository-plus is as simple as:
 
 ```JAVA
      List persons = selectFrom(personRepository).where("lastName").equal("Tian").findAll();
-     List persons = selectFrom(personRepository).where((person -> person.getLastName())).equal("Tian") //refactory friendly feature :)
-                   .findAll();
+     Page persons = selectFrom(personRepository).where("lastName").equal("Tian").findPage(page);
+     
 ```
 Comparing to querying with JOOQ : 
 
