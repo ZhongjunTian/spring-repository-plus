@@ -47,14 +47,6 @@ public class SpecificationImpl implements Specification<Object> {
         this.filter = filter;
     }
 
-    public SpecificationImpl(Filter filter, String... leftJoinFetchTables) {
-        if(leftJoinFetchTables != null)
-            for(String table : leftJoinFetchTables){
-                this.leftJoinFetchTables.add(table);
-            }
-        this.filter = filter;
-    }
-
 
     /*
      this method is called by

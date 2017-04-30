@@ -22,6 +22,11 @@ public class PersonController {
     @Autowired
     PersonRepository personRepository;
 
+    @PostMapping("/filter")
+    public List<Person> filter(@RequestBody Filter filter){
+        return selectFrom(personRepository).where(filter).findAll();
+    }
+
     @GetMapping("/person")
     public List<Person> simple(){
         return selectFrom(personRepository).findAll();
@@ -40,20 +45,15 @@ public class PersonController {
     @GetMapping("/lambda")
     public List<Person> lambda() {
         return selectFrom(personRepository)
-                .leftJoin(p -> p.getAddress())
-                .where((p -> p.getAddress().getCity())).equal("Dallas").findAll();
+                .leftJoin("address")
+                .where("address").equal("Dallas").findAll();
     }
 
     @GetMapping("/complexQuery")
     public List<Person> complexQuery() {
         return selectFrom(personRepository)
-                .where((p -> p.getAddress().getCity())).equal("Dallas")
+                .where("address").equal("Dallas")
                 .findAll();
-    }
-
-    @PostMapping("/filter")
-    public List<Person> filter(@RequestBody Filter filter){
-        return selectFrom(personRepository).where(filter).findAll();
     }
 
 

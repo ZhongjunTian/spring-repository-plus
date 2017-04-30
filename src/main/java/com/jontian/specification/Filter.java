@@ -15,36 +15,41 @@
  */
 package com.jontian.specification;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
  *@author Jon (Zhongjun Tian)
  */
 public class Filter {
+    /*
+    logic
+     */
+    public static final String AND ="and";
+    public static final String OR ="or";
+    /*
+    Operators
+     */
     public static final String EQUAL = "eq";
     public static final String NOT_EQUAL = "neq";
     public static final String EMPTY_OR_NULL = "isnull";
     public static final String NOT_EMPTY_AND_NOT_NULL = "isnotnull";
-
     public static final String CONTAINS = "contains";
     public static final String NOT_CONTAINS = "doesnotcontain";
-
     public static final String START_WITH = "startswith";
     public static final String END_WITH = "endswith";
-
     public static final String GREATER_THAN = "gt";
     public static final String LESS_THAN = "lt";
     public static final String GREATER_THAN_OR_EQUAL = "gte";
     public static final String LESS_THAN_OR_EQUAL = "lte";
-
     public static final String IN = "in";
 
+    //delimiter for crossing table search
     public static final String PATH_DELIMITER = ".";
+
     String field;
     String operator;
     Object value;
-    public static final String AND ="and";
-    public static final String OR ="or";
     String logic;
     List<Filter> filters;
     public Filter(){}
@@ -52,6 +57,22 @@ public class Filter {
         this.field = field;
         this.operator = operator;
         this.value = value;
+    }
+    public Filter(String logic, Filter ... filters){
+        this.logic = logic;
+        this.filters = Arrays.asList(filters);
+    }
+    public Filter and(Filter filters){
+        return new Filter(AND, filters);
+    }
+    public Filter or(Filter filters){
+        return new Filter(OR, filters);
+    }
+    public static Filter and(Filter... filters){
+        return new Filter(AND, filters);
+    }
+    public static Filter or(Filter... filters){
+        return new Filter(OR, filters);
     }
 
     public String getLogic() {

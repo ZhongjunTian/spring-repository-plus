@@ -33,7 +33,6 @@ import java.util.function.Function;
 public class SpecificationBuilder<T> {
     private static Logger logger = LoggerFactory.getLogger(SpecificationBuilder.class);
 
-    private BytecodeParser bytecodeParser;
     private JpaSpecificationExecutor repository;
     private List<String> leftJoinTable;
     //TODO private List<String> innerJoinTable;
@@ -44,7 +43,6 @@ public class SpecificationBuilder<T> {
     SpecificationBuilder<ENTITY> selectFrom(REPO repository){
         SpecificationBuilder<ENTITY> builder = new SpecificationBuilder<>();
         builder.repository = repository;
-        builder.bytecodeParser = new BytecodeParser();
         builder.leftJoinTable = new ArrayList<>();
         return builder;
     }
@@ -58,20 +56,10 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
-    public <R> SpecificationBuilder<T> leftJoin(Function<T,R> getter){
-        String attributePath = bytecodeParser.getPathFromCallStack();
-        return this.leftJoin(attributePath);
-    }
 
 
     public SpecificationBuilder<T> where(String field, String operator, Object value){
         return where(new Filter(field, operator, value));
-    }
-
-    public <R> SpecificationBuilder<T> where(Function<T,R> getter, String operator, Object value) {
-        String attributePath = bytecodeParser.getPathFromCallStack();
-        where(new Filter(attributePath, operator,value));
-        return this;
     }
 
     public SpecificationBuilder<T> where(Filter filter){
@@ -85,9 +73,9 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
-    public <R> SpecificationWhereClauseBuilder where(Function<T,R> getter){
-        String attributePath = bytecodeParser.getPathFromCallStack();
-        return new SpecificationWhereClauseBuilder(attributePath, this);
+
+    public <R> SpecificationWhereClauseBuilder where(String field){
+        return new SpecificationWhereClauseBuilder(field, this);
     }
 
     public List<T> findAll(){
