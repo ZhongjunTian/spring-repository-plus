@@ -1,13 +1,10 @@
 package com.jontian.demo.db;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import javax.persistence.*;
 
 @Entity
-//@Table(name = "PERSON")
 public class Person {
 
     @Id
@@ -17,7 +14,6 @@ public class Person {
     private String firstName;
     private String lastName;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
     private Long addressId;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
