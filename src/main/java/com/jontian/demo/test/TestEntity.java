@@ -26,4 +26,5 @@ public class TestEntity {
     public Double aDouble;
     public Float aFloat;
     public Boolean aBoolean;
+
 }

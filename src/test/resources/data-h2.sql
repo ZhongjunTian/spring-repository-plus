@@ -8,17 +8,16 @@ insert into Test_Entity (
      a_long,
      a_integer,
      a_double,
-     a_float ,
-     a_boolean) values
+     a_float,
+    a_boolean ) values
      (
-     '2000-01-01 12:00:00AM',
-     '2000-01-01 12:00:00AM',
+     '2000-01-01 12:30:00',
+     '2000-01-01 12:30:00',
      'a',
      'a',
-     0,
-     0,
-     0,
-     0,
-     0,
-     0
-     );
+     1,
+     1,
+     1,
+     1,
+     1,
+     true);

@@ -21,10 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.jontian.specification.Filter.*;
 
@@ -151,21 +148,25 @@ public class SpecificationImpl implements Specification<Object> {
     private Predicate getSinglePredicateByPath(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
         Class<? extends Object> entityType = path.getJavaType();
         Predicate p = null;
-
+        //look at Hibernate Mapping types
+        //we only support primitive types and data/time types
+        if(!(value instanceof Comparable)){
+            throw new IllegalStateException("This library only support primitive types and date/time types in the list: " +
+                    "Integer, Long, Double, Float, Short, BidDecimal, Character, String, Byte, Boolean" +
+                    ", Date, Time, TimeStamp, Calendar");
+        }
         switch (operator) {
             /*
-                Operator for String/Number/Date/Boolean
+                Operator for any type
              */
             case EQUAL:
-//                assertNumberOrStringOrBoolean(value);
                 p = cb.equal(path, (value));
                 break;
             case NOT_EQUAL:
-//                assertNumberOrStringOrBoolean(value);
                 p = cb.notEqual(path, (value));
                 break;
             /*
-                Operator for String/Date/Boolean/Number
+                Operator for any type
              */
             case EMPTY_OR_NULL:
                 p = cb.isNull(path);
@@ -176,22 +177,18 @@ public class SpecificationImpl implements Specification<Object> {
                 p = cb.and(p, cb.notEqual(path, ""));
                 break;
             /*
-                Operator for String
+                Operator for String like type
              */
             case CONTAINS:
-                //assertString(value);
                 p = cb.like(path.as(String.class), "%" + String.valueOf(value) + "%");
                 break;
             case NOT_CONTAINS:
-                //assertString(value);
                 p = cb.notLike(path.as(String.class), "%" + String.valueOf(value) + "%");
                 break;
             case START_WITH:
-                //assertString(value);
                 p = cb.like(path.as(String.class), String.valueOf(value) + "%");
                 break;
             case END_WITH:
-                //assertString(value);
                 p = cb.like(path.as(String.class), "%" + String.valueOf(value));
                 break;
             /*
@@ -200,6 +197,8 @@ public class SpecificationImpl implements Specification<Object> {
             case GREATER_THAN:
                 if(value instanceof Date){
                     p = cb.greaterThan(path.as(Date.class), (Date)(value));
+                }else if(value instanceof Calendar){
+                    p = cb.greaterThan(path.as(Calendar.class), (Calendar)(value));
                 }else {
                     p = cb.greaterThan(path.as(String.class), (value).toString());
                 }
@@ -207,6 +206,8 @@ public class SpecificationImpl implements Specification<Object> {
             case GREATER_THAN_OR_EQUAL:
                 if(value instanceof Date){
                     p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date)(value));
+                }else if(value instanceof Calendar){
+                    p = cb.greaterThanOrEqualTo(path.as(Calendar.class), (Calendar)(value));
                 }else {
                     p = cb.greaterThanOrEqualTo(path.as(String.class), (value).toString());
                 }
@@ -214,6 +215,8 @@ public class SpecificationImpl implements Specification<Object> {
             case LESS_THAN:
                 if(value instanceof Date){
                     p = cb.lessThan(path.as(Date.class), (Date)(value));
+                }else if(value instanceof Calendar){
+                    p = cb.lessThan(path.as(Calendar.class), (Calendar)(value));
                 }else {
                     p = cb.lessThan(path.as(String.class), (value).toString());
                 }
@@ -221,6 +224,8 @@ public class SpecificationImpl implements Specification<Object> {
             case LESS_THAN_OR_EQUAL:
                 if(value instanceof Date){
                     p = cb.lessThanOrEqualTo(path.as(Date.class), (Date)(value));
+                }else if(value instanceof Calendar){
+                    p = cb.lessThanOrEqualTo(path.as(Calendar.class), (Calendar)(value));
                 }else {
                     p = cb.lessThanOrEqualTo(path.as(String.class), (value).toString());
                 }
@@ -242,32 +247,6 @@ public class SpecificationImpl implements Specification<Object> {
             return true;
         }
         throw new IllegalStateException("After operator " + IN + " should be a list, not '" + value + "'");
-    }
-
-    private void assertNumberOrStringOrBoolean(Object value) {
-        if (value instanceof Boolean) {
-            return;
-        }
-        assertNumberOrString(value);
-    }
-
-    //TODO assert value & entity type
-    private void assertNumberOrString(Object value) {
-        if (value instanceof Integer || value instanceof Double) {
-            return;
-        } else if (value instanceof String) {
-            //TODO check date format
-            return;
-        } else {
-            throw new IllegalStateException("unsupported value type " + value.getClass());
-        }
-    }
-
-    private void assertString(Object value) throws SpecificationException {
-        if (value instanceof String) {
-            return;
-        }
-        throw new SpecificationException("cannot cast " + value + " to String");
     }
 
     private Path<Object> parsePath(Path<? extends Object> root, String field) {
