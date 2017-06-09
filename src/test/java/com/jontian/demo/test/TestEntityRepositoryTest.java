@@ -1,5 +1,6 @@
-package com.jontian.demo;
+package com.jontian.demo.test;
 
+import com.jontian.demo.Application;
 import com.jontian.demo.db.PersonRepository;
 import com.jontian.demo.test.TestEntityRepository;
 import com.jontian.specification.SpecificationBuilder;
@@ -18,10 +19,8 @@ import static com.jontian.specification.SpecificationBuilder.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class})
-public class PersonRepositoryTest {
+public class TestEntityRepositoryTest {
 
-    @Autowired
-    PersonRepository personRepository;
     @Autowired
     TestEntityRepository repository;
     List<List> allEntities = new LinkedList<List>() {
