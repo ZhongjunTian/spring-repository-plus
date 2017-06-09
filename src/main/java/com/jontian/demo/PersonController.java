@@ -20,38 +20,14 @@ public class PersonController {
     @Autowired
     PersonRepository personRepository;
 
-    @PostMapping("/filter")
+    @PostMapping("/persons")
     public List<Person> filter(@RequestBody Filter filter){
         return selectFrom(personRepository).where(filter).findAll();
     }
 
-    @GetMapping("/person")
-    public List<Person> simple(){
-        return selectFrom(personRepository).findAll();
-    }
-
-    @GetMapping("/join")
+    @GetMapping("/persons")
     public List<Person> join(){
         return selectFrom(personRepository).leftJoin("address").findAll();
-    }
-
-    @GetMapping("/page")
-    public Page<Person> page(){
-        return selectFrom(personRepository).findPage(null);
-    }
-
-    @GetMapping("/lambda")
-    public List<Person> lambda() {
-        return selectFrom(personRepository)
-                .leftJoin("address")
-                .where("address").equal("Dallas").findAll();
-    }
-
-    @GetMapping("/complexQuery")
-    public List<Person> complexQuery() {
-        return selectFrom(personRepository)
-                .where("address").equal("Dallas")
-                .findAll();
     }
 
 

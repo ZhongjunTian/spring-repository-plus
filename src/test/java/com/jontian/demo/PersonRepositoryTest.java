@@ -1,8 +1,9 @@
-package com.jontian.specification;
+package com.jontian.demo;
 
-import com.jontian.demo.Application;
 import com.jontian.demo.db.PersonRepository;
 import com.jontian.demo.test.TestEntityRepository;
+import com.jontian.specification.SpecificationBuilder;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,11 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static com.jontian.specification.SpecificationBuilder.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class})
-public class ApplicationTests {
+public class PersonRepositoryTest {
 
     @Autowired
     PersonRepository personRepository;
@@ -47,47 +47,47 @@ public class ApplicationTests {
             entities = selectFrom(repository).where("utilDate").lessThan("2000-01-01 12:00:00").findAll();
 
             entities = SpecificationBuilder.selectFrom(repository).where("string").equal("a").findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where("aChar").equal('a').findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where("bigDecimal").equal(1).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("bigDecimal").equal(1.).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("bigDecimal").equal(BigDecimal.ONE).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where("aLong").equal("1").findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aLong").equal(1L).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aLong").equal(1.).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where("aInteger").equal("1").findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aInteger").equal(1).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aInteger").equal(1.).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aInteger").equal(1L).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where("aDouble").equal("1").findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aDouble").equal(1.).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aDouble").equal(1L).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where("aFloat").equal("1").findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aFloat").equal(1L).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
             entities = SpecificationBuilder.selectFrom(repository).where("aFloat").equal(1.).findAll();
-            assertTrue(entities.size() >= 1);
+            Assert.assertTrue(entities.size() >= 1);
         } catch (Exception e) {
             e.printStackTrace();
             e.getMessage();

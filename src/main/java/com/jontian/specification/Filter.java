@@ -117,7 +117,15 @@ public class Filter {
 
     @Override
     public String toString(){
-        //TODO to String
-       return "";
+        if(logic == null){
+            return "{"+field+" "+operator+" "+value+"}";
+        }else{
+            StringBuilder sb = new StringBuilder();
+            sb.append("{");
+            if(filters != null)
+                filters.forEach( f -> sb.append(f.toString()));
+            sb.append("}");
+            return sb.toString();
+        }
     }
 }
