@@ -44,8 +44,8 @@ CREATE TABLE ADDRESS (
 ## User guide
 ### clone and run
 
-git clone https://github.com/ZhongjunTian/spring-repository-plus.git
-cd spring-repository-plus
-mvn spring-boot:run
+git clone https://github.com/ZhongjunTian/spring-repository-plus.git  
+cd spring-repository-plus  
+mvn spring-boot:run  
 
 You can look at PersonControllerTest.java and TestEntityControllerTest.java for more details,
