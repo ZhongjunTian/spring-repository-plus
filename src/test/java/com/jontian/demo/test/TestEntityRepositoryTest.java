@@ -1,39 +1,43 @@
 package com.jontian.demo.test;
 
-import com.jontian.demo.Application;
-import com.jontian.demo.db.PersonRepository;
-import com.jontian.demo.test.TestEntityRepository;
 import com.jontian.specification.SpecificationBuilder;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaMetamodelEntityInformation;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.LinkedList;
 import java.util.List;
 
-import static com.jontian.specification.SpecificationBuilder.*;
+import static com.jontian.specification.SpecificationBuilder.selectFrom;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {Application.class})
+@DataJpaTest
+@Transactional
 public class TestEntityRepositoryTest {
 
-    @Autowired
-    TestEntityRepository repository;
-    List<List> allEntities = new LinkedList<List>() {
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            for (List list : this) {
-                sb.append(list.size() + ",");
-            }
-            return sb.toString();
-        }
-    };
+    @PersistenceContext
+    EntityManager em;
+
+    SimpleJpaRepository<TestEntity, Integer> repository;
     List entities;
+
+    @Before
+    public void setup(){
+        JpaEntityInformation<TestEntity, Integer> information = new JpaMetamodelEntityInformation<>(
+                TestEntity.class, em.getMetamodel());
+        repository = new SimpleJpaRepository<>(information, em);
+        entities = SpecificationBuilder.selectFrom(repository).where("string").equal("a").findAll();
+        Assert.assertTrue(entities.size() >= 1);
+    }
 
     @Test
     public void contextLoads() {
