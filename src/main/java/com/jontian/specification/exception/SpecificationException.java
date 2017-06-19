@@ -1,6 +1,6 @@
 package com.jontian.specification.exception;
 
-public class SpecificationException extends Exception {
+public class SpecificationException extends RuntimeException {
     public SpecificationException() {
     }
 

@@ -11,3 +11,18 @@ insert into PERSON (first_name, last_name, address_id) values ('Jon_2', 'Tian',3
 insert into PERSON (first_name, last_name, address_id) values ('Jon_3', 'Tian',4);
 insert into PERSON (first_name, last_name, address_id) values ('Jon_4', 'Tian',5);
 insert into PERSON (first_name, last_name, address_id) values ('Jon_5', 'Tian',6);
+
+insert into Test_Entity (
+     util_date,
+     sql_date,
+     string,
+     a_char,
+     big_decimal,
+     a_long,
+     a_integer,
+     a_double,
+     a_float,
+    a_boolean ) values
+     (
+     '2000-01-01 12:30:00','2000-01-01 12:30:00','a','a',
+     1, 1, 1, 1, 1, true);

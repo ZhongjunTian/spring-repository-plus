@@ -1,18 +1,3 @@
-/*
- * Copyright 2017 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.jontian.specification;
 
 import com.jontian.specification.exception.SpecificationException;
@@ -26,59 +11,19 @@ import java.util.*;
 import static com.jontian.specification.Filter.*;
 
 /**
- *@author Jon (Zhongjun Tian)
+ * Created by zhongjun on 6/18/17.
  */
-public class SpecificationImpl implements Specification<Object> {
-    private static final Logger logger = LoggerFactory.getLogger(SpecificationImpl.class);
+public class WhereSpecification implements Specification<Object> {
+    private static Logger logger = LoggerFactory.getLogger(WhereSpecification.class);
     private Filter filter;
-    private List<String> leftJoinFetchTables;
-    private List<String> rightJoinFetchTables;
-    private List<String> innerJoinFetchTables;
 
-    public SpecificationImpl(Filter filter) {
+    public WhereSpecification(Filter filter) {
         this.filter = filter;
     }
 
-    public SpecificationImpl(Filter filter, List<String> leftJoinFetchTables) {
-        this.leftJoinFetchTables = leftJoinFetchTables;
-        this.filter = filter;
-    }
-
-
-    /*
-     this method is called by
-     SimpleJpaRepository.applySpecificationToCriteria(Specification<T> spec, CriteriaQuery<S> query)
-     https://github.com/spring-projects/spring-data-jpa/blob/master/src/main/java/org/springframework/data/jpa/repository/support/SimpleJpaRepository.java
-     */
     @Override
-    public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-        try {
-            Predicate predicate = getPredicate(filter, root, cb);
-
-            leftJoinFetchTables(root, cq, leftJoinFetchTables);
-
-            if (predicate == null)
-                return cb.conjunction();
-            else
-                return predicate;
-        } catch (SpecificationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void leftJoinFetchTables(Root<Object> root, CriteriaQuery<?> cq, List<String> joinFetchTables) {
-        //because this piece of code may be run twice for pagination,
-        //first time 'count' , second time 'select',
-        //So, if this is called by 'count', don't join fetch tables.
-        if (isCountCriteriaQuery(cq))
-            return;
-        if( joinFetchTables != null && (joinFetchTables.size() > 0)) {
-            for (String table : joinFetchTables) {
-                if(table != null)
-                    root.fetch(table, JoinType.LEFT);
-            }
-            ((CriteriaQuery<Object>) cq).select(root);
-        }
+    public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) throws SpecificationException {
+        return getPredicate( filter, root,cb);
     }
 
     private Predicate getPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
@@ -130,19 +75,6 @@ public class SpecificationImpl implements Specification<Object> {
         } catch (Exception e) {
             throw new SpecificationException("Unable to parse " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
         }
-    }
-
-    /*
-        For Issue:
-        when run repository.findAll(specs,page)
-        The method toPredicate(...) upon will return a Predicate for Count(TableName) number of rows.
-        In hibernate query, we cannot do "select count(table_1) from table_1 left fetch join table_2 where ..."
-        Resolution:
-        In this scenario, CriteriaQuery<?> is CriteriaQuery<Long>, because return type is Long.
-        we don't fetch other tables where generating query for "count";
-     */
-    private boolean isCountCriteriaQuery(CriteriaQuery<?> cq) {
-        return cq.getResultType().toString().contains("java.lang.Long");
     }
 
     private Predicate getSinglePredicateByPath(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
@@ -260,4 +192,3 @@ public class SpecificationImpl implements Specification<Object> {
         return parsePath(p, secondPart);
     }
 }
-

@@ -27,42 +27,42 @@ public class SpecificationWhereClauseBuilder {
     }
 
     public SpecificationBuilder equal(Object obj){
-        specificationBuilder.where(path, Filter.EQUAL, obj);
+        specificationBuilder.where(new Filter(path, Filter.EQUAL, obj));
         return specificationBuilder;
     }
 
     public SpecificationBuilder notEqual(Object obj){
-        specificationBuilder.where(path, Filter.NOT_EQUAL, obj);
+        specificationBuilder.where(new Filter(path, Filter.NOT_EQUAL, obj));
         return specificationBuilder;
     }
 
     public SpecificationBuilder contains(Object obj){
-        specificationBuilder.where(path, Filter.CONTAINS, obj);
+        specificationBuilder.where(new Filter(path, Filter.CONTAINS, obj));
         return specificationBuilder;
     }
 
     public SpecificationBuilder notContains(Object obj){
-        specificationBuilder.where(path, Filter.NOT_CONTAINS, obj);
+        specificationBuilder.where(new Filter(path, Filter.NOT_CONTAINS, obj));
         return specificationBuilder;
     }
 
     public SpecificationBuilder greaterThan(Object obj){
-        specificationBuilder.where(path, Filter.GREATER_THAN, obj);
+        specificationBuilder.where(new Filter(path, Filter.GREATER_THAN, obj));
         return specificationBuilder;
     }
 
     public SpecificationBuilder lessThan(Object obj){
-        specificationBuilder.where(path, Filter.LESS_THAN, obj);
+        specificationBuilder.where(new Filter(path, Filter.LESS_THAN, obj));
         return specificationBuilder;
     }
     
     public SpecificationBuilder greaterThanOrEqual(Object obj){
-        specificationBuilder.where(path, Filter.GREATER_THAN_OR_EQUAL, obj);
+        specificationBuilder.where(new Filter(path, Filter.GREATER_THAN_OR_EQUAL, obj));
         return specificationBuilder;
     }
 
     public SpecificationBuilder lessThanOrEqual(Object obj){
-        specificationBuilder.where(path, Filter.LESS_THAN_OR_EQUAL, obj);
+        specificationBuilder.where(new Filter(path, Filter.LESS_THAN_OR_EQUAL, obj));
         return specificationBuilder;
     }
 

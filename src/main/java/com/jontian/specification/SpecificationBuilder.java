@@ -22,68 +22,49 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 
 /**
- *@author Jon (Zhongjun Tian)
+ * @author Jon (Zhongjun Tian)
  */
 public class SpecificationBuilder<T> {
     private static Logger logger = LoggerFactory.getLogger(SpecificationBuilder.class);
 
     private JpaSpecificationExecutor repository;
-    private List<String> leftJoinTable;
-    //TODO private List<String> innerJoinTable;
-    //TODO private List<String> rightJoinTable;
-    private Filter filter;
+    private SpecificationChain specificationChain;
 
-    public static <ENTITY, REPO extends JpaRepository<ENTITY,?> & JpaSpecificationExecutor>
-    SpecificationBuilder<ENTITY> selectFrom(REPO repository){
+    public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
+    SpecificationBuilder<ENTITY> selectFrom(REPO repository) {
         SpecificationBuilder<ENTITY> builder = new SpecificationBuilder<>();
         builder.repository = repository;
-        builder.leftJoinTable = new ArrayList<>();
+        builder.specificationChain = new SpecificationChain();
         return builder;
     }
 
-
-    public SpecificationBuilder<T> leftJoin(String... tables){
-        if(tables!=null)
-            for(String table : tables){
-                leftJoinTable.add(table);
-            }
-        return this;
-    }
-
-
-
-    public SpecificationBuilder<T> where(String field, String operator, Object value){
-        return where(new Filter(field, operator, value));
-    }
-
-    public SpecificationBuilder<T> where(Filter filter){
-        if(this.repository == null){
+    public SpecificationBuilder<T> where(Filter filter) {
+        if (this.repository == null) {
             throw new IllegalStateException("Did not specify which repository, please use from() before where()");
         }
-        if(this.filter != null){
-            throw new IllegalStateException("Cannot use where() twice");
-        }
-        this.filter = filter;
+        specificationChain.add(new WhereSpecification(filter));
         return this;
     }
 
-
-    public <R> SpecificationWhereClauseBuilder where(String field){
+    public SpecificationWhereClauseBuilder where(String field) {
         return new SpecificationWhereClauseBuilder(field, this);
     }
 
-    public List<T> findAll(){
-        return repository.findAll(new SpecificationImpl(filter, leftJoinTable));
+    public SpecificationBuilder<T> leftJoin(String... tables) {
+        specificationChain.add(new JoinSpecification(tables));
+        return this;
     }
 
-    public Page<T> findPage(Pageable page){
-        return repository.findAll(new SpecificationImpl(filter, leftJoinTable), page);
+    public List<T> findAll() {
+        return repository.findAll(specificationChain);
+    }
+
+    public Page<T> findPage(Pageable page) {
+        return repository.findAll(specificationChain,page);
     }
 
 }
