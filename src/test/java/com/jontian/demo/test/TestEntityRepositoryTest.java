@@ -35,7 +35,7 @@ public class TestEntityRepositoryTest {
         JpaEntityInformation<TestEntity, Integer> information = new JpaMetamodelEntityInformation<>(
                 TestEntity.class, em.getMetamodel());
         repository = new SimpleJpaRepository<>(information, em);
-        entities = SpecificationBuilder.selectFrom(repository).where("string").equal("a").findAll();
+        entities = SpecificationBuilder.selectDistinctFrom(repository).where("string").equal("a").findAll();
         Assert.assertTrue(entities.size() >= 1);
     }
 

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -41,6 +42,17 @@ public class SpecificationBuilder<T> {
         builder.specificationChain = new SpecificationChain();
         return builder;
     }
+    public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
+    SpecificationBuilder<ENTITY> selectDistinctFrom(REPO repository) {
+        SpecificationBuilder<ENTITY> builder = selectFrom(repository);
+        builder.distinct();
+        return builder;
+    }
+
+    private SpecificationBuilder distinct() {
+        specificationChain.add(((root, criteriaQuery, criteriaBuilder) -> criteriaQuery.distinct(true).getRestriction()));
+        return this;
+    }
 
     public SpecificationBuilder<T> where(Filter filter) {
         if (this.repository == null) {
@@ -50,13 +62,27 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
-    public SpecificationWhereClauseBuilder where(String field) {
-        return new SpecificationWhereClauseBuilder(field, this);
+    public SpecificationBuilder<T> leftJoin(String... tables) {
+        JoinSpecification spec = new JoinSpecification();
+        spec.setLeftJoinFetchTables(Arrays.asList(tables));
+        specificationChain.add(spec);
+        return this;
+    }
+    public SpecificationBuilder<T> innerJoin(String... tables) {
+        JoinSpecification spec = new JoinSpecification();
+        spec.setInnnerJoinFetchTables(Arrays.asList(tables));
+        specificationChain.add(spec);
+        return this;
+    }
+    public SpecificationBuilder<T> rightJoin(String... tables) {
+        JoinSpecification spec = new JoinSpecification();
+        spec.setRightJoinFetchTables(Arrays.asList(tables));
+        specificationChain.add(spec);
+        return this;
     }
 
-    public SpecificationBuilder<T> leftJoin(String... tables) {
-        specificationChain.add(new JoinSpecification(tables));
-        return this;
+    public SpecificationWhereClauseBuilder where(String field) {
+        return new SpecificationWhereClauseBuilder(field, this);
     }
 
     public List<T> findAll() {

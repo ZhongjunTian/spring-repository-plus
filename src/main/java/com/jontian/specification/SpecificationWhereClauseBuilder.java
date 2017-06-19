@@ -16,7 +16,12 @@
 package com.jontian.specification;
 
 
-public class SpecificationWhereClauseBuilder {
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
+public class SpecificationWhereClauseBuilder<T> {
     private SpecificationBuilder specificationBuilder;
     private String path;
     private SpecificationWhereClauseBuilder(){};
@@ -26,44 +31,52 @@ public class SpecificationWhereClauseBuilder {
         this.path = path;
     }
 
-    public SpecificationBuilder equal(Object obj){
+    public SpecificationWhereClauseBuilder equal(Object obj){
         specificationBuilder.where(new Filter(path, Filter.EQUAL, obj));
-        return specificationBuilder;
+        return this;
     }
 
-    public SpecificationBuilder notEqual(Object obj){
+    public SpecificationWhereClauseBuilder notEqual(Object obj){
         specificationBuilder.where(new Filter(path, Filter.NOT_EQUAL, obj));
-        return specificationBuilder;
+        return this;
     }
 
-    public SpecificationBuilder contains(Object obj){
+    public SpecificationWhereClauseBuilder contains(Object obj){
         specificationBuilder.where(new Filter(path, Filter.CONTAINS, obj));
-        return specificationBuilder;
+        return this;
     }
 
-    public SpecificationBuilder notContains(Object obj){
+    public SpecificationWhereClauseBuilder notContains(Object obj){
         specificationBuilder.where(new Filter(path, Filter.NOT_CONTAINS, obj));
-        return specificationBuilder;
+        return this;
     }
 
-    public SpecificationBuilder greaterThan(Object obj){
+    public SpecificationWhereClauseBuilder greaterThan(Object obj){
         specificationBuilder.where(new Filter(path, Filter.GREATER_THAN, obj));
-        return specificationBuilder;
+        return this;
     }
 
-    public SpecificationBuilder lessThan(Object obj){
+    public SpecificationWhereClauseBuilder lessThan(Object obj){
         specificationBuilder.where(new Filter(path, Filter.LESS_THAN, obj));
-        return specificationBuilder;
+        return this;
     }
     
-    public SpecificationBuilder greaterThanOrEqual(Object obj){
+    public SpecificationWhereClauseBuilder greaterThanOrEqual(Object obj){
         specificationBuilder.where(new Filter(path, Filter.GREATER_THAN_OR_EQUAL, obj));
-        return specificationBuilder;
+        return this;
     }
 
-    public SpecificationBuilder lessThanOrEqual(Object obj){
+    public SpecificationWhereClauseBuilder lessThanOrEqual(Object obj){
         specificationBuilder.where(new Filter(path, Filter.LESS_THAN_OR_EQUAL, obj));
-        return specificationBuilder;
+        return this;
+    }
+
+    public List<T> findAll() {
+        return specificationBuilder.findAll();
+    }
+
+    public Page<T> findPage(Pageable page) {
+        return specificationBuilder.findPage(page);
     }
 
 }
