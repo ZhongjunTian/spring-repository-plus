@@ -18,7 +18,7 @@ public class PersonController {
 
     @PostMapping("/persons")
     public List<Person> filter(@RequestBody Filter filter){
-        return selectFrom(personRepository).where(filter).findAll();
+        return selectFrom(personRepository).leftJoin("address").where(filter).findAll();
     }
 
     @GetMapping("/persons")
