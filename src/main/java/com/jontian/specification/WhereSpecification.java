@@ -23,11 +23,11 @@ public class WhereSpecification implements Specification<Object> {
 
     @Override
     public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) throws SpecificationException {
-        return getPredicate( filter, root,cb);
+        return getPredicate(filter, root, cb);
     }
 
     private Predicate getPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
-        if (validFilter(filter))
+        if (isInValidFilter(filter))
             return null;
         if (filter.getLogic() == null) {//one filter
             Predicate p = getSinglePredicateByPath(filter, root, cb);
@@ -45,7 +45,7 @@ public class WhereSpecification implements Specification<Object> {
         }
     }
 
-    private boolean validFilter(Filter filter) {
+    private boolean isInValidFilter(Filter filter) {
         return filter == null ||
                 (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null);
     }
@@ -82,7 +82,7 @@ public class WhereSpecification implements Specification<Object> {
         Predicate p = null;
         //look at Hibernate Mapping types
         //we only support primitive types and data/time types
-        if(!(value instanceof Comparable)){
+        if (!(value instanceof Comparable)) {
             throw new IllegalStateException("This library only support primitive types and date/time types in the list: " +
                     "Integer, Long, Double, Float, Short, BidDecimal, Character, String, Byte, Boolean" +
                     ", Date, Time, TimeStamp, Calendar");
@@ -127,38 +127,38 @@ public class WhereSpecification implements Specification<Object> {
                 Operator for Number/Date
              */
             case GREATER_THAN:
-                if(value instanceof Date){
-                    p = cb.greaterThan(path.as(Date.class), (Date)(value));
-                }else if(value instanceof Calendar){
-                    p = cb.greaterThan(path.as(Calendar.class), (Calendar)(value));
-                }else {
+                if (value instanceof Date) {
+                    p = cb.greaterThan(path.as(Date.class), (Date) (value));
+                } else if (value instanceof Calendar) {
+                    p = cb.greaterThan(path.as(Calendar.class), (Calendar) (value));
+                } else {
                     p = cb.greaterThan(path.as(String.class), (value).toString());
                 }
                 break;
             case GREATER_THAN_OR_EQUAL:
-                if(value instanceof Date){
-                    p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date)(value));
-                }else if(value instanceof Calendar){
-                    p = cb.greaterThanOrEqualTo(path.as(Calendar.class), (Calendar)(value));
-                }else {
+                if (value instanceof Date) {
+                    p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date) (value));
+                } else if (value instanceof Calendar) {
+                    p = cb.greaterThanOrEqualTo(path.as(Calendar.class), (Calendar) (value));
+                } else {
                     p = cb.greaterThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN:
-                if(value instanceof Date){
-                    p = cb.lessThan(path.as(Date.class), (Date)(value));
-                }else if(value instanceof Calendar){
-                    p = cb.lessThan(path.as(Calendar.class), (Calendar)(value));
-                }else {
+                if (value instanceof Date) {
+                    p = cb.lessThan(path.as(Date.class), (Date) (value));
+                } else if (value instanceof Calendar) {
+                    p = cb.lessThan(path.as(Calendar.class), (Calendar) (value));
+                } else {
                     p = cb.lessThan(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN_OR_EQUAL:
-                if(value instanceof Date){
-                    p = cb.lessThanOrEqualTo(path.as(Date.class), (Date)(value));
-                }else if(value instanceof Calendar){
-                    p = cb.lessThanOrEqualTo(path.as(Calendar.class), (Calendar)(value));
-                }else {
+                if (value instanceof Date) {
+                    p = cb.lessThanOrEqualTo(path.as(Date.class), (Date) (value));
+                } else if (value instanceof Calendar) {
+                    p = cb.lessThanOrEqualTo(path.as(Calendar.class), (Calendar) (value));
+                } else {
                     p = cb.lessThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;

@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+@Deprecated
 public class SpecificationWhereClauseBuilder<T> {
     private SpecificationBuilder specificationBuilder;
     private String path;

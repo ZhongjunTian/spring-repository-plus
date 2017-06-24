@@ -33,15 +33,16 @@ public class SpecificationBuilder<T> {
     private static Logger logger = LoggerFactory.getLogger(SpecificationBuilder.class);
 
     private JpaSpecificationExecutor repository;
-    private SpecificationChain specificationChain;
+    private SpecificationImpl specification;
 
     public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
     SpecificationBuilder<ENTITY> selectFrom(REPO repository) {
         SpecificationBuilder<ENTITY> builder = new SpecificationBuilder<>();
         builder.repository = repository;
-        builder.specificationChain = new SpecificationChain();
+        builder.specification = new SpecificationImpl();
         return builder;
     }
+
     public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
     SpecificationBuilder<ENTITY> selectDistinctFrom(REPO repository) {
         SpecificationBuilder<ENTITY> builder = selectFrom(repository);
@@ -50,7 +51,7 @@ public class SpecificationBuilder<T> {
     }
 
     private SpecificationBuilder distinct() {
-        specificationChain.add(((root, criteriaQuery, criteriaBuilder) -> criteriaQuery.distinct(true).getRestriction()));
+        specification.add(((root, criteriaQuery, criteriaBuilder) -> criteriaQuery.distinct(true).getRestriction()));
         return this;
     }
 
@@ -58,26 +59,22 @@ public class SpecificationBuilder<T> {
         if (this.repository == null) {
             throw new IllegalStateException("Did not specify which repository, please use from() before where()");
         }
-        specificationChain.add(new WhereSpecification(filter));
+        specification.add(new WhereSpecification(filter));
         return this;
     }
 
     public SpecificationBuilder<T> leftJoin(String... tables) {
-        JoinSpecification spec = new JoinSpecification();
-        spec.setLeftJoinFetchTables(Arrays.asList(tables));
-        specificationChain.add(spec);
+        specification.add(new JoinSpecification().setLeftJoinFetchTables(Arrays.asList(tables)));
         return this;
     }
+
     public SpecificationBuilder<T> innerJoin(String... tables) {
-        JoinSpecification spec = new JoinSpecification();
-        spec.setInnnerJoinFetchTables(Arrays.asList(tables));
-        specificationChain.add(spec);
+        specification.add(new JoinSpecification().setInnnerJoinFetchTables(Arrays.asList(tables)));
         return this;
     }
+
     public SpecificationBuilder<T> rightJoin(String... tables) {
-        JoinSpecification spec = new JoinSpecification();
-        spec.setRightJoinFetchTables(Arrays.asList(tables));
-        specificationChain.add(spec);
+        specification.add(new JoinSpecification().setRightJoinFetchTables(Arrays.asList(tables)));
         return this;
     }
 
@@ -86,11 +83,11 @@ public class SpecificationBuilder<T> {
     }
 
     public List<T> findAll() {
-        return repository.findAll(specificationChain);
+        return repository.findAll(specification);
     }
 
     public Page<T> findPage(Pageable page) {
-        return repository.findAll(specificationChain,page);
+        return repository.findAll(specification, page);
     }
 
 }

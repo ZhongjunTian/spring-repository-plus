@@ -12,7 +12,9 @@ public class JoinSpecification implements Specification<Object> {
     List<String> leftJoinFetchTables;
     List<String> innnerJoinFetchTables;
     List<String> rightJoinFetchTables;
-    public JoinSpecification(){}
+
+    public JoinSpecification() {
+    }
 
     @Override
     public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -52,15 +54,18 @@ public class JoinSpecification implements Specification<Object> {
         }
     }
 
-    public void setLeftJoinFetchTables(List<String> leftJoinFetchTables) {
+    public JoinSpecification setLeftJoinFetchTables(List<String> leftJoinFetchTables) {
         this.leftJoinFetchTables = leftJoinFetchTables;
+        return this;
     }
 
-    public void setInnnerJoinFetchTables(List<String> innnerJoinFetchTables) {
+    public JoinSpecification setInnnerJoinFetchTables(List<String> innnerJoinFetchTables) {
         this.innnerJoinFetchTables = innnerJoinFetchTables;
+        return this;
     }
 
-    public void setRightJoinFetchTables(List<String> rightJoinFetchTables) {
+    public JoinSpecification setRightJoinFetchTables(List<String> rightJoinFetchTables) {
         this.rightJoinFetchTables = rightJoinFetchTables;
+        return this;
     }
 }

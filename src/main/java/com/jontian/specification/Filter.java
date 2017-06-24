@@ -19,14 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *@author Jon (Zhongjun Tian)
+ * @author Jon (Zhongjun Tian)
  */
 public class Filter {
     /*
     logic
      */
-    public static final String AND ="and";
-    public static final String OR ="or";
+    public static final String AND = "and";
+    public static final String OR = "or";
     /*
     Operators
      */
@@ -52,26 +52,34 @@ public class Filter {
     Object value;
     String logic;
     List<Filter> filters;
-    public Filter(){}
+
+    public Filter() {
+    }
+
     public Filter(String field, String operator, Object value) {
         this.field = field;
         this.operator = operator;
         this.value = value;
     }
-    public Filter(String logic, Filter ... filters){
+
+    public Filter(String logic, Filter... filters) {
         this.logic = logic;
         this.filters = Arrays.asList(filters);
     }
-    public Filter and(Filter filters){
+
+    public Filter and(Filter filters) {
         return new Filter(AND, filters);
     }
-    public Filter or(Filter filters){
+
+    public Filter or(Filter filters) {
         return new Filter(OR, filters);
     }
-    public static Filter and(Filter... filters){
+
+    public static Filter and(Filter... filters) {
         return new Filter(AND, filters);
     }
-    public static Filter or(Filter... filters){
+
+    public static Filter or(Filter... filters) {
         return new Filter(OR, filters);
     }
 
@@ -116,14 +124,14 @@ public class Filter {
     }
 
     @Override
-    public String toString(){
-        if(logic == null){
-            return "{"+field+" "+operator+" "+value+"}";
-        }else{
+    public String toString() {
+        if (logic == null) {
+            return "{" + field + " " + operator + " " + value + "}";
+        } else {
             StringBuilder sb = new StringBuilder();
             sb.append("{");
-            if(filters != null)
-                filters.forEach( f -> sb.append(f.toString()));
+            if (filters != null)
+                filters.forEach(f -> sb.append(f.toString()));
             sb.append("}");
             return sb.toString();
         }

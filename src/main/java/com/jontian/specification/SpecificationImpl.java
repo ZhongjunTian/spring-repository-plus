@@ -30,8 +30,8 @@ import java.util.List;
 /**
  *@author Jon (Zhongjun Tian)
  */
-public class SpecificationChain implements Specification<Object> {
-    private static final Logger logger = LoggerFactory.getLogger(SpecificationChain.class);
+public class SpecificationImpl implements Specification<Object> {
+    private static final Logger logger = LoggerFactory.getLogger(SpecificationImpl.class);
     private List<Specification> specifications = new LinkedList<>();
 
 
