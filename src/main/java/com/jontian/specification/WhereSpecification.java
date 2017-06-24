@@ -30,7 +30,7 @@ public class WhereSpecification implements Specification<Object> {
         if (isInValidFilter(filter))
             return null;
         if (filter.getLogic() == null) {//one filter
-            Predicate p = getSinglePredicateByPath(filter, root, cb);
+            Predicate p = doGetPredicate(filter, root, cb);
             return p;
         } else {//logic filters
             if (filter.getLogic().equals(AND)) {
@@ -45,11 +45,6 @@ public class WhereSpecification implements Specification<Object> {
         }
     }
 
-    private boolean isInValidFilter(Filter filter) {
-        return filter == null ||
-                (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null);
-    }
-
     private Predicate[] getPredicateList(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
         List<Predicate> predicateList = new LinkedList<>();
         for (Filter f : filter.getFilters()) {
@@ -60,7 +55,13 @@ public class WhereSpecification implements Specification<Object> {
         return predicateList.toArray(new Predicate[predicateList.size()]);
     }
 
-    private Predicate getSinglePredicateByPath(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
+
+    private boolean isInValidFilter(Filter filter) {
+        return filter == null ||
+                (filter.getField() == null && filter.getFilters() == null && filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null);
+    }
+
+    private Predicate doGetPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
         String field = filter.getField();
         Path<Object> path = null;
         try {
@@ -71,13 +72,13 @@ public class WhereSpecification implements Specification<Object> {
         String operator = filter.getOperator();
         Object value = filter.getValue();
         try {
-            return getSinglePredicateByPath(cb, path, operator, value);
+            return doGetPredicate(cb, path, operator, value);
         } catch (Exception e) {
             throw new SpecificationException("Unable to parse " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
         }
     }
 
-    private Predicate getSinglePredicateByPath(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
+    private Predicate doGetPredicate(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
         Class<? extends Object> entityType = path.getJavaType();
         Predicate p = null;
         //look at Hibernate Mapping types

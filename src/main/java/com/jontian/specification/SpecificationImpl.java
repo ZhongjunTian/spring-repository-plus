@@ -48,8 +48,7 @@ public class SpecificationImpl implements Specification<Object> {
             if(p!=null)
                 predicates.add(p);
         }
-        Predicate[] predicateArray = predicates.toArray(new Predicate[predicates.size()]);
-        return cb.and(predicateArray);
+        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
     public void add(Specification<Object> specification){
