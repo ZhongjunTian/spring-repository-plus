@@ -59,8 +59,8 @@ public class JoinSpecification implements Specification<Object> {
         return this;
     }
 
-    public JoinSpecification setInnnerJoinFetchTables(List<String> innnerJoinFetchTables) {
-        this.innnerJoinFetchTables = innnerJoinFetchTables;
+    public JoinSpecification setInnerJoinFetchTables(List<String> innerJoinFetchTables) {
+        this.innnerJoinFetchTables = innerJoinFetchTables;
         return this;
     }
 

@@ -69,7 +69,7 @@ public class SpecificationBuilder<T> {
     }
 
     public SpecificationBuilder<T> innerJoin(String... tables) {
-        specification.add(new JoinSpecification().setInnnerJoinFetchTables(Arrays.asList(tables)));
+        specification.add(new JoinSpecification().setInnerJoinFetchTables(Arrays.asList(tables)));
         return this;
     }
 
