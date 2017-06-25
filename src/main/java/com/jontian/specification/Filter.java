@@ -15,6 +15,8 @@
  */
 package com.jontian.specification;
 
+import com.jontian.specification.exception.SpecificationException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +50,8 @@ public class Filter {
 
     //delimiter for crossing table search
     public static final String PATH_DELIMITER = ".";
+    public static final String LEFT_BRACKET = "(";
+    public static final String RIGHT_BRACKET = ")";
 
     String field;
     String operator;
@@ -132,10 +136,54 @@ public class Filter {
             return field + DELIMITER + operator + DELIMITER + value;
         } else if (filters != null && !filters.isEmpty()) {
             //(xxx~eq~yyy~and~aaa~eq~bbb)
-            return "("+String.join(DELIMITER+logic+DELIMITER,
-                    filters.stream().map(Filter::toString).collect(Collectors.toList()))+")";
+            return LEFT_BRACKET +String.join(DELIMITER+logic+DELIMITER,
+                    filters.stream().map(Filter::toString).collect(Collectors.toList()))+ RIGHT_BRACKET;
         } else {
             return "";
         }
+    }
+
+    public static Filter parse(String queryString){
+        if(queryString == null || queryString.isEmpty())
+            return null;
+        if(queryString.startsWith(LEFT_BRACKET) && queryString.endsWith(RIGHT_BRACKET)){
+            queryString = queryString.substring(1,queryString.length()-1);
+        }
+        if(queryString.contains(LEFT_BRACKET) && queryString.contains(RIGHT_BRACKET)){
+            //TODO
+        }else{
+            String[] params = queryString.split(DELIMITER);
+            if(params.length%4 == 3){
+                String logic = null;
+                for(int i=3; i<params.length; i+=4){
+                    if(logic == null){
+                        logic = params[i];
+                    }
+                    if(!params[i].equalsIgnoreCase(logic)){
+                        throw new SpecificationException("Illegal query string with two different logic: "+logic+", "+params[i]);
+                    }
+                }
+                if(logic==null){
+                    return new Filter(params[0], params[1],params[2]);
+                }else if(logic.equalsIgnoreCase(AND) || logic.equalsIgnoreCase(OR)){
+                    int n = (params.length+1)/4;
+                    Filter[] filters = new Filter[n];
+                    for(int i=0; i<n*4; i+=4){
+                        filters[i/4] = new Filter(params[i], params[i+1], params[i+2]);
+                    }
+                    if(logic.equalsIgnoreCase(AND)){
+                        return and(filters);
+                    }else{
+                        return or(filters);
+                    }
+                }else{
+                    throw new SpecificationException("Unknown logic: "+logic);
+                }
+
+            }else{
+                throw new SpecificationException("Illegal query string, format: "+queryString);
+            }
+        }
+        return null;
     }
 }

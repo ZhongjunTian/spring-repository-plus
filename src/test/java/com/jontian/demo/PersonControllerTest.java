@@ -21,6 +21,13 @@ public class PersonControllerTest {
 
     @Autowired
     TestRestTemplate restTemplate;
+    @Test
+    public void httpGetWithFilterTest(){
+        String queryString = "lastName~eq~Tian~and~address.city~eq~Dallas";
+        ResponseEntity<Person[]> resp = restTemplate.getForEntity("/persons?filter=" + queryString, Person[].class);
+        Person[] persons = resp.getBody();
+        Assert.assertTrue(persons.length>0);
+    }
 
     @Test
     public void filter() throws Exception {

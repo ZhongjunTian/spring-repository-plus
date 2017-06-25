@@ -55,6 +55,11 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
+    public SpecificationBuilder<T> where(String queryString) {
+        Filter filter = Filter.parse(queryString);
+        return where(filter);
+    }
+
     public SpecificationBuilder<T> where(Filter filter) {
         if (this.repository == null) {
             throw new IllegalStateException("Did not specify which repository, please use from() before where()");
@@ -76,10 +81,6 @@ public class SpecificationBuilder<T> {
     public SpecificationBuilder<T> rightJoin(String... tables) {
         specification.add(new JoinSpecification().setRightJoinFetchTables(Arrays.asList(tables)));
         return this;
-    }
-
-    public SpecificationWhereClauseBuilder where(String field) {
-        return new SpecificationWhereClauseBuilder(field, this);
     }
 
     public List<T> findAll() {
