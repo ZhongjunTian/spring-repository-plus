@@ -171,15 +171,18 @@ public class Filter {
         List<Filter> filters = new LinkedList<>();
         String logic = null;
         for (int i = s; i + 2 <= e; ) {
-            if (logic == null && i + 3 <= e) {
-                logic = params[i + 3];
-            }
             if (params[i].startsWith(LEFT_BRACKET)) {
                 int j = findRightBracket(params, i, e);
                 Filter filter = parse(params, i, j);
                 filters.add(filter);
+                if (logic == null && j + 1 <= e) {
+                    logic = params[j + 1];
+                }
                 i = j + 2;
             } else {
+                if (logic == null && i + 3 <= e) {
+                    logic = params[i + 3];
+                }
                 if (i + 3 <= e)
                     if (!params[i + 3].equals(logic) || !params[i + 3].equals(AND) && !params[i + 3].equals(OR))
                         throw new SpecificationException("Illegal logic or mixed logic in one level bracket");
@@ -202,10 +205,23 @@ public class Filter {
         int countRight = 0;
         for (int j = i; j < e; j += 4) {
             if (params[j].startsWith(LEFT_BRACKET)) {
-                countLeft++;
+                for(int k=0; k<params[j].length(); k++){
+                    if(params[j].substring(k,k+1).equals(LEFT_BRACKET)){
+                        countLeft++;
+                    }else{
+                        break;
+                    }
+                }
             }
             if (params[j + 2].endsWith(RIGHT_BRACKET)) {
-                countRight++;
+                for(int k=params[j + 2].length()-1; k>=0; k--){
+                    String substring = params[j + 2].substring(k, k + 1);
+                    if(substring.equals(RIGHT_BRACKET)){
+                        countRight++;
+                    }else{
+                        break;
+                    }
+                }
             }
             if (countLeft == countRight) {
                 return j + 2;
