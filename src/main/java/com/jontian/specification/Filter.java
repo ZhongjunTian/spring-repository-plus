@@ -17,6 +17,7 @@ package com.jontian.specification;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Jon (Zhongjun Tian)
@@ -27,6 +28,7 @@ public class Filter {
      */
     public static final String AND = "and";
     public static final String OR = "or";
+    public static final String DELIMITER = "~";
     /*
     Operators
      */
@@ -126,14 +128,14 @@ public class Filter {
     @Override
     public String toString() {
         if (logic == null) {
-            return "{" + field + " " + operator + " " + value + "}";
+            //xxx~eq~yyy
+            return field + DELIMITER + operator + DELIMITER + value;
+        } else if (filters != null && !filters.isEmpty()) {
+            //(xxx~eq~yyy~and~aaa~eq~bbb)
+            return "("+String.join(DELIMITER+logic+DELIMITER,
+                    filters.stream().map(Filter::toString).collect(Collectors.toList()))+")";
         } else {
-            StringBuilder sb = new StringBuilder();
-            sb.append("{");
-            if (filters != null)
-                filters.forEach(f -> sb.append(f.toString()));
-            sb.append("}");
-            return sb.toString();
+            return "";
         }
     }
 }
