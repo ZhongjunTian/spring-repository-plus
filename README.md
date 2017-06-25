@@ -1,3 +1,4 @@
+[中文版](http://www.jianshu.com/p/4bdc8339f473)
 # spring-repository-plus
 https://github.com/ZhongjunTian/spring-repository-plus
 This is actually a good implementation of spring JPA Specification interface, it makes front-end having full control of filtering data with very little back-end code.
