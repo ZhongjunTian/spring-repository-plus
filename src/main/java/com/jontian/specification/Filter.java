@@ -18,6 +18,7 @@ package com.jontian.specification;
 import com.jontian.specification.exception.SpecificationException;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -131,59 +132,85 @@ public class Filter {
 
     @Override
     public String toString() {
+        return toSting(false);
+    }
+
+    public String toSting(boolean withBrackets) {
         if (logic == null) {
             //xxx~eq~yyy
             return field + DELIMITER + operator + DELIMITER + value;
         } else if (filters != null && !filters.isEmpty()) {
             //(xxx~eq~yyy~and~aaa~eq~bbb)
-            return LEFT_BRACKET +String.join(DELIMITER+logic+DELIMITER,
-                    filters.stream().map(Filter::toString).collect(Collectors.toList()))+ RIGHT_BRACKET;
+            String join = String.join(DELIMITER + logic + DELIMITER,
+                    filters.stream().map(f -> f.toSting(true)).collect(Collectors.toList()));
+            if (withBrackets)
+                return LEFT_BRACKET + join + RIGHT_BRACKET;
+            else
+                return join;
         } else {
             return "";
         }
     }
 
-    public static Filter parse(String queryString){
-        if(queryString == null || queryString.isEmpty())
+    //(a~eq~a~and~(b~eq~b~or~b~eq~bb))
+    public static Filter parse(String queryString) {
+        if (queryString == null || queryString.isEmpty())
             return null;
-        if(queryString.startsWith(LEFT_BRACKET) && queryString.endsWith(RIGHT_BRACKET)){
-            queryString = queryString.substring(1,queryString.length()-1);
-        }
-        if(queryString.contains(LEFT_BRACKET) && queryString.contains(RIGHT_BRACKET)){
-            //TODO
-        }else{
-            String[] params = queryString.split(DELIMITER);
-            if(params.length%4 == 3){
-                String logic = null;
-                for(int i=3; i<params.length; i+=4){
-                    if(logic == null){
-                        logic = params[i];
-                    }
-                    if(!params[i].equalsIgnoreCase(logic)){
-                        throw new SpecificationException("Illegal query string with two different logic: "+logic+", "+params[i]);
-                    }
-                }
-                if(logic==null){
-                    return new Filter(params[0], params[1],params[2]);
-                }else if(logic.equalsIgnoreCase(AND) || logic.equalsIgnoreCase(OR)){
-                    int n = (params.length+1)/4;
-                    Filter[] filters = new Filter[n];
-                    for(int i=0; i<n*4; i+=4){
-                        filters[i/4] = new Filter(params[i], params[i+1], params[i+2]);
-                    }
-                    if(logic.equalsIgnoreCase(AND)){
-                        return and(filters);
-                    }else{
-                        return or(filters);
-                    }
-                }else{
-                    throw new SpecificationException("Unknown logic: "+logic);
-                }
+        String[] params = queryString.split(DELIMITER);
+        return parse(params, 0, params.length - 1);
+    }
 
-            }else{
-                throw new SpecificationException("Illegal query string, format: "+queryString);
+    private static Filter parse(String[] params, int s, int e) {
+        int n = e - s + 1;
+        if (n % 4 != 3)
+            throw new IllegalStateException(String.join(DELIMITER, Arrays.asList(params).subList(s, e + 1)));
+        if (params[s].startsWith(LEFT_BRACKET) && params[e].endsWith(RIGHT_BRACKET)) {
+            params[s] = params[s].substring(1, params[s].length());
+            params[e] = params[e].substring(0, params[e].length() - 1);
+        }
+        List<Filter> filters = new LinkedList<>();
+        String logic = null;
+        for (int i = s; i + 2 <= e; ) {
+            if (logic == null && i + 3 <= e) {
+                logic = params[i + 3];
+            }
+            if (params[i].startsWith(LEFT_BRACKET)) {
+                int j = findRightBracket(params, i, e);
+                Filter filter = parse(params, i, j);
+                filters.add(filter);
+                i = j + 2;
+            } else {
+                if (i + 3 <= e)
+                    if (!params[i + 3].equals(logic) || !params[i + 3].equals(AND) && !params[i + 3].equals(OR))
+                        throw new SpecificationException("Illegal logic or mixed logic in one level bracket");
+                Filter filter = new Filter(params[i], params[i + 1], params[i + 2]);
+                filters.add(filter);
+                i += 4;
             }
         }
-        return null;
+        if (logic == null) {
+            return filters.get(0);
+        } else if (logic.equals(OR)) {
+            return or(filters.toArray(new Filter[filters.size()]));
+        } else {
+            return and(filters.toArray(new Filter[filters.size()]));
+        }
+    }
+
+    private static int findRightBracket(String[] params, int i, int e) {
+        int countLeft = 0;
+        int countRight = 0;
+        for (int j = i; j < e; j += 4) {
+            if (params[j].startsWith(LEFT_BRACKET)) {
+                countLeft++;
+            }
+            if (params[j + 2].endsWith(RIGHT_BRACKET)) {
+                countRight++;
+            }
+            if (countLeft == countRight) {
+                return j + 2;
+            }
+        }
+        throw new SpecificationException("");//TODO
     }
 }
