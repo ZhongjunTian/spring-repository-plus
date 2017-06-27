@@ -49,7 +49,7 @@ public class TestEntityRepositoryTest {
     private void testAll() {
         try {
             entities = selectFrom(repository).where(new Filter("utilDate",GREATER_THAN,"2000-01-01 12:00:00")).findAll();
-            entities = selectFrom(repository).where(new Filter("utilDate",LESS_THAN,("2000-01-01 12:00:00"))).findAll();
+            Assert.assertTrue(entities.size() >= 1);
 
             entities = SpecificationBuilder.selectFrom(repository).where(new Filter("string",EQUAL,("a"))).findAll();
             Assert.assertTrue(entities.size() >= 1);

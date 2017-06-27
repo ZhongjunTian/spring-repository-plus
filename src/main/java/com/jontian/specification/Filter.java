@@ -37,8 +37,10 @@ public class Filter {
      */
     public static final String EQUAL = "eq";
     public static final String NOT_EQUAL = "neq";
-    public static final String EMPTY_OR_NULL = "isnull";
-    public static final String NOT_EMPTY_AND_NOT_NULL = "isnotnull";
+    public static final String IS_NULL = "isnull";
+    public static final String IS_NOT_NULL = "isnotnull";
+    public static final String IS_EMPTY = "isempty";
+    public static final String IS_NOT_EMPTY = "isnotempty";
     public static final String CONTAINS = "contains";
     public static final String NOT_CONTAINS = "doesnotcontain";
     public static final String START_WITH = "startswith";
@@ -163,7 +165,7 @@ public class Filter {
     private static Filter parse(String[] params, int s, int e) {
         int n = e - s + 1;
         if (n % 4 != 3)
-            throw new IllegalStateException(String.join(DELIMITER, Arrays.asList(params).subList(s, e + 1)));
+            throw new SpecificationException("illegal"+String.join(DELIMITER, Arrays.asList(params).subList(s, e + 1)));
         if (params[s].startsWith(LEFT_BRACKET) && params[e].endsWith(RIGHT_BRACKET)) {
             params[s] = params[s].substring(1, params[s].length());
             params[e] = params[e].substring(0, params[e].length() - 1);

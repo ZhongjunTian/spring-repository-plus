@@ -3,6 +3,7 @@ package com.jontian.demo.db;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Person {
@@ -13,7 +14,8 @@ public class Person {
 
     private String firstName;
     private String lastName;
-
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date birthDate;
     private Long addressId;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -53,4 +55,11 @@ public class Person {
         this.address = address;
     }
 
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
 }

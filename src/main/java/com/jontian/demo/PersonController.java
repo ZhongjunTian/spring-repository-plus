@@ -23,7 +23,8 @@ public class PersonController {
 
     @GetMapping("/persons")
     public List<Person> join(@RequestParam(value = "filter",required = false) String queryString){
-        return selectFrom(personRepository).leftJoin("address").where(queryString).findAll();
+        List<Person> address = selectFrom(personRepository).leftJoin("address").where(queryString).findAll();
+        return address;
     }
 
 

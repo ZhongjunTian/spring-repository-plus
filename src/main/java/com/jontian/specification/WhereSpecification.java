@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jontian.specification.Filter.*;
@@ -15,6 +17,7 @@ import static com.jontian.specification.Filter.*;
  */
 public class WhereSpecification implements Specification<Object> {
     private static Logger logger = LoggerFactory.getLogger(WhereSpecification.class);
+    private SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private Filter filter;
 
     public WhereSpecification(Filter filter) {
@@ -74,7 +77,7 @@ public class WhereSpecification implements Specification<Object> {
         try {
             return doGetPredicate(cb, path, operator, value);
         } catch (Exception e) {
-            throw new SpecificationException("Unable to parse " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
+            throw new SpecificationException("Unable to filter by: " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
         }
     }
 
@@ -90,28 +93,34 @@ public class WhereSpecification implements Specification<Object> {
         }
         switch (operator) {
             /*
-                Operator for any type
+                Operator for Comparable type
              */
             case EQUAL:
+                value = parseValue(path, value);
                 p = cb.equal(path, (value));
                 break;
             case NOT_EQUAL:
+                value = parseValue(path, value);
                 p = cb.notEqual(path, (value));
                 break;
             /*
                 Operator for any type
              */
-            case EMPTY_OR_NULL:
+            case IS_NULL:
                 p = cb.isNull(path);
-                p = cb.or(p, cb.equal(path, ""));
                 break;
-            case NOT_EMPTY_AND_NOT_NULL:
+            case IS_NOT_NULL:
                 p = cb.isNotNull(path);
-                p = cb.and(p, cb.notEqual(path, ""));
                 break;
             /*
-                Operator for String like type
+                Operator for String type
              */
+            case IS_EMPTY:
+                p = cb.equal(path,"");
+                break;
+            case IS_NOT_EMPTY:
+                p = cb.notEqual(path,"");
+                break;
             case CONTAINS:
                 p = cb.like(path.as(String.class), "%" + String.valueOf(value) + "%");
                 break;
@@ -125,44 +134,44 @@ public class WhereSpecification implements Specification<Object> {
                 p = cb.like(path.as(String.class), "%" + String.valueOf(value));
                 break;
             /*
-                Operator for Number/Date
+                Operator for Comparable type;
+                does not support Calendar
              */
             case GREATER_THAN:
+                value = parseValue(path, value);
                 if (value instanceof Date) {
                     p = cb.greaterThan(path.as(Date.class), (Date) (value));
-                } else if (value instanceof Calendar) {
-                    p = cb.greaterThan(path.as(Calendar.class), (Calendar) (value));
                 } else {
                     p = cb.greaterThan(path.as(String.class), (value).toString());
                 }
                 break;
             case GREATER_THAN_OR_EQUAL:
+                value = parseValue(path, value);
                 if (value instanceof Date) {
                     p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date) (value));
-                } else if (value instanceof Calendar) {
-                    p = cb.greaterThanOrEqualTo(path.as(Calendar.class), (Calendar) (value));
                 } else {
                     p = cb.greaterThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN:
+                value = parseValue(path, value);
                 if (value instanceof Date) {
                     p = cb.lessThan(path.as(Date.class), (Date) (value));
-                } else if (value instanceof Calendar) {
-                    p = cb.lessThan(path.as(Calendar.class), (Calendar) (value));
                 } else {
                     p = cb.lessThan(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN_OR_EQUAL:
+                value = parseValue(path, value);
                 if (value instanceof Date) {
                     p = cb.lessThanOrEqualTo(path.as(Date.class), (Date) (value));
-                } else if (value instanceof Calendar) {
-                    p = cb.lessThanOrEqualTo(path.as(Calendar.class), (Calendar) (value));
                 } else {
                     p = cb.lessThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
+            /*
+                Functionality in experimenting;
+             */
             case IN:
                 if (assertCollection(value)) {
                     p = path.in((Collection) value);
@@ -173,6 +182,17 @@ public class WhereSpecification implements Specification<Object> {
                 throw new IllegalStateException("unknown operator: " + operator);
         }
         return p;
+    }
+
+    private Object parseValue(Path<Object> path, Object value) {
+        if (Date.class.isAssignableFrom(path.getJavaType())) {
+            try {
+                value = defaultDateFormat.parse(value.toString());
+            } catch (ParseException e) {
+                throw new SpecificationException("Illegal date format: " + value + ", required format is " + defaultDateFormat.toPattern());
+            }
+        }
+        return value;
     }
 
     private boolean assertCollection(Object value) {
