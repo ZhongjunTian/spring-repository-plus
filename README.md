@@ -1,12 +1,16 @@
+[中文版](http://www.jianshu.com/p/4bdc8339f473)
 # spring-repository-plus
 https://github.com/ZhongjunTian/spring-repository-plus
 This is actually a good implementation of spring JPA Specification interface, it makes front-end having full control of filtering data with very little back-end code.
 
 Querying with spring-repository-plus is as simple as:
 
-HTTP POST  the JSON string, and you can filter data based on any column.
 
-![image.png](http://upload-images.jianshu.io/upload_images/6110329-52fc3da8a7b2eb08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/6110329-0cf77a8569a20c56.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+or
+
+![](http://upload-images.jianshu.io/upload_images/6110329-52fc3da8a7b2eb08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 Here is **ALL** your back-end code
 ```
@@ -24,7 +28,11 @@ But with such little code, you can also filter data by **ANY** complex logic (an
 The example below is equivalent to 
 lastName='Tian' AND (address.city='Dallas' OR address.city like 'San%')
 
-![image.png](http://upload-images.jianshu.io/upload_images/6110329-cf58162836cbae40.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/6110329-7ddd70b1687f6900.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+or
+
+![](http://upload-images.jianshu.io/upload_images/6110329-cf58162836cbae40.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 Table definition
 ```
