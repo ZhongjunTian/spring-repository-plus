@@ -158,7 +158,7 @@ public class Filter {
     public static Filter parse(String queryString) {
         if (queryString == null || queryString.isEmpty())
             return null;
-        String[] params = queryString.split(DELIMITER);
+        String[] params = queryString.split(DELIMITER, -1);
         return parse(params, 0, params.length - 1);
     }
 

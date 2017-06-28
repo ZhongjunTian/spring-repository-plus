@@ -15,6 +15,13 @@ public class FilterTest {
         String s;
         Filter filter;
 
+        s = "a~isnull~~and~b~isnull~";
+        filter = parse(s);
+        Assert.assertEquals(s, filter.toString());
+
+        s = "a~isnull~";
+        filter = parse(s);
+        Assert.assertEquals(s, filter.toString());
 
 
         s = "a~eq~a";
