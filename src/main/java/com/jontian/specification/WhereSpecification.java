@@ -17,7 +17,8 @@ import static com.jontian.specification.Filter.*;
  */
 public class WhereSpecification implements Specification<Object> {
     private static Logger logger = LoggerFactory.getLogger(WhereSpecification.class);
-    private SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private static SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat dateFormat;
     private Filter filter;
 
     public WhereSpecification(Filter filter) {
@@ -187,9 +188,10 @@ public class WhereSpecification implements Specification<Object> {
     private Object parseValue(Path<Object> path, Object value) {
         if (Date.class.isAssignableFrom(path.getJavaType())) {
             try {
-                value = defaultDateFormat.parse(value.toString());
+                SimpleDateFormat dateFormat = this.dateFormat != null ? this.dateFormat : defaultDateFormat;
+                value = dateFormat.parse(value.toString());
             } catch (ParseException e) {
-                throw new SpecificationException("Illegal date format: " + value + ", required format is " + defaultDateFormat.toPattern());
+                throw new SpecificationException("Illegal date format: " + value + ", required format is " + dateFormat.toPattern());
             }
         }
         return value;
@@ -211,5 +213,13 @@ public class WhereSpecification implements Specification<Object> {
         String secondPart = field.substring(i + 1, field.length());
         Path<Object> p = root.get(firstPart);
         return parsePath(p, secondPart);
+    }
+
+    public static void setDefaultDateFormat(SimpleDateFormat defaultDateFormat) {
+        WhereSpecification.defaultDateFormat = defaultDateFormat;
+    }
+
+    public void setDateFormat(SimpleDateFormat dateFormat) {
+        this.dateFormat = dateFormat;
     }
 }
