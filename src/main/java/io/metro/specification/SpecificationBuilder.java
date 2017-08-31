@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.Repository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +16,7 @@ public class SpecificationBuilder<T> {
     private JpaSpecificationExecutor repository;
     private SpecificationImpl specification;
 
-    public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
+    public static <ENTITY, REPO extends Repository<ENTITY, ?> & JpaSpecificationExecutor>
     SpecificationBuilder<ENTITY> selectFrom(REPO repository) {
         SpecificationBuilder<ENTITY> builder = new SpecificationBuilder<>();
         builder.repository = repository;
@@ -24,7 +24,7 @@ public class SpecificationBuilder<T> {
         return builder;
     }
 
-    public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
+    public static <ENTITY, REPO extends Repository<ENTITY, ?> & JpaSpecificationExecutor>
     SpecificationBuilder<ENTITY> selectDistinctFrom(REPO repository) {
         SpecificationBuilder<ENTITY> builder = selectFrom(repository);
         builder.distinct();
