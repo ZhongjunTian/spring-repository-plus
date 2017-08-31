@@ -68,7 +68,7 @@ public class WhereSpecification implements Specification<Object> {
         try {
             path = parsePath(root, field);
         } catch (Exception e) {
-            throw new SpecificationException("Meet problem when parse field path: " + field + ", this path does not exist. " + e.getMessage(), e);
+            throw new SpecificationException("Exception occurred when parsing field path: " + field + ", this path does not exist. " + e.getMessage(), e);
         }
         String operator = filter.getOperator();
         Object value = filter.getValue();
@@ -84,7 +84,7 @@ public class WhereSpecification implements Specification<Object> {
         Predicate p = null;
         //look at Hibernate Mapping types
         //we only support primitive types and data/time types
-        if (!(value instanceof Comparable)) {
+        if (!(value instanceof Comparable) && !(value instanceof Collection)) {
             throw new IllegalStateException("This library only support primitive types and date/time types in the list: " +
                     "Integer, Long, Double, Float, Short, BidDecimal, Character, String, Byte, Boolean" +
                     ", Date, Time, TimeStamp, Calendar");
@@ -195,6 +195,7 @@ public class WhereSpecification implements Specification<Object> {
     }
 
     private boolean assertCollection(Object value) {
+        logger.info("assertCollection: {}, {}", value.getClass().getSimpleName(), value);
         if (value instanceof Collection) {
             return true;
         }
