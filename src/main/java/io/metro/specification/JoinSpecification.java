@@ -1,13 +1,10 @@
-package com.jontian.specification;
+package io.metro.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
 import java.util.List;
 
-/**
- * Created by zhongjun on 6/18/17.
- */
 public class JoinSpecification implements Specification<Object> {
     List<String> leftJoinFetchTables;
     List<String> innnerJoinFetchTables;

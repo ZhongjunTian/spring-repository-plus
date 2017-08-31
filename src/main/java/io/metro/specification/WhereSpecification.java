@@ -1,6 +1,6 @@
-package com.jontian.specification;
+package io.metro.specification;
 
-import com.jontian.specification.exception.SpecificationException;
+import io.metro.specification.exception.SpecificationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,11 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.jontian.specification.Filter.*;
+import static io.metro.specification.Filter.*;
 
-/**
- * Created by zhongjun on 6/18/17.
- */
 public class WhereSpecification implements Specification<Object> {
     private static Logger logger = LoggerFactory.getLogger(WhereSpecification.class);
     private static SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

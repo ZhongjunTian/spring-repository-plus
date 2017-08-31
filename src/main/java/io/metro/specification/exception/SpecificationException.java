@@ -1,4 +1,4 @@
-package com.jontian.specification.exception;
+package io.metro.specification.exception;
 
 public class SpecificationException extends RuntimeException {
     public SpecificationException() {
