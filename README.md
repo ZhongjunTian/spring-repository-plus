@@ -48,4 +48,4 @@ CREATE TABLE ADDRESS (
 ```
 Maven Build:
 
-mvn clean package deploy
+mvn clean package deploy -Dmaven.test.skip=true
