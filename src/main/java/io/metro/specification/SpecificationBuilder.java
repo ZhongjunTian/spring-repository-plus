@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.Repository;
 
@@ -72,4 +73,7 @@ public class SpecificationBuilder<T> {
         return repository.findAll(specification, page);
     }
 
+    public List<Specification> getSpecifications() {
+        return specification.getSpecifications();
+    }
 }

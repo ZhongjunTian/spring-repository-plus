@@ -37,5 +37,8 @@ public class SpecificationImpl implements Specification<Object> {
         specifications.add(specification);
     }
 
+    public List<Specification> getSpecifications() {
+        return specifications;
+    }
 }
 
