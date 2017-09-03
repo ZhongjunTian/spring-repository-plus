@@ -139,64 +139,64 @@ public class WhereSpecification implements Specification<Object> {
             case GREATER_THAN:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("GREATER_THAN: instance=Date, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN: instance=Date, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThan(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("GREATER_THAN: instance=Double, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN: instance=Double, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThan(path.as(Double.class), (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("GREATER_THAN: instance=Integer, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN: instance=Integer, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThan(path.as(Integer.class), (Integer) (value));
                 } else {
-                    logger.debug("GREATER_THAN: instance=String, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN: instance=String, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThan(path.as(String.class), (value).toString());
                 }
                 break;
             case GREATER_THAN_OR_EQUAL:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThanOrEqualTo(path.as(Double.class), (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThanOrEqualTo(path.as(Integer.class), (Integer) (value));
                 } else {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path);
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path.getAlias());
                     p = cb.greaterThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("LESS_THAN: instance=Date, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN: instance=Date, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThan(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("LESS_THAN: instance=Double, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN: instance=Double, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThan(path.as(Double.class), (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("LESS_THAN: instance=Integer, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN: instance=Integer, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThan(path.as(Integer.class), (Integer) (value));
                 } else {
-                    logger.debug("LESS_THAN: instance=String, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN: instance=String, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThan(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN_OR_EQUAL:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThanOrEqualTo(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThanOrEqualTo(path.as(Double.class), (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThanOrEqualTo(path.as(Integer.class), (Integer) (value));
                 } else {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path);
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path.getAlias());
                     p = cb.lessThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
@@ -219,11 +219,33 @@ public class WhereSpecification implements Specification<Object> {
         if (Date.class.isAssignableFrom(path.getJavaType())) {
             try {
                 SimpleDateFormat dateFormat = this.dateFormat != null ? this.dateFormat : defaultDateFormat;
-                value = dateFormat.parse(value.toString());
+                return  dateFormat.parse(value.toString());
             } catch (ParseException e) {
                 throw new SpecificationException("Illegal date format: " + value + ", required format is " + dateFormat.toPattern());
             }
         }
+
+        if(Boolean.class.isAssignableFrom(path.getJavaType()) || Boolean.TYPE.isAssignableFrom(path.getJavaType()))
+            return Boolean.parseBoolean( value.toString() );
+
+        if(Byte.class.isAssignableFrom(path.getJavaType()) || Byte.TYPE.isAssignableFrom(path.getJavaType()))
+            return Byte.parseByte( value.toString() );
+
+        if(Short.class.isAssignableFrom(path.getJavaType()) || Short.TYPE.isAssignableFrom(path.getJavaType()))
+            return Short.parseShort( value.toString() );
+
+        if(Integer.class.isAssignableFrom(path.getJavaType()) || Integer.TYPE.isAssignableFrom(path.getJavaType()))
+            return Integer.parseInt( value.toString() );
+
+        if(Long.class.isAssignableFrom(path.getJavaType()) || Long.TYPE.isAssignableFrom(path.getJavaType()))
+            return Long.parseLong( value.toString() );
+
+        if(Float.class.isAssignableFrom(path.getJavaType()) || Float.TYPE.isAssignableFrom(path.getJavaType()))
+            return Float.parseFloat( value.toString() );
+
+        if(Double.class.isAssignableFrom(path.getJavaType()) || Double.TYPE.isAssignableFrom(path.getJavaType()))
+            return Double.parseDouble( value.toString() );
+
         return value;
     }
 
