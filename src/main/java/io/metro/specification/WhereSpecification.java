@@ -139,64 +139,64 @@ public class WhereSpecification implements Specification<Object> {
             case GREATER_THAN:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("GREATER_THAN: instance=Date, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("GREATER_THAN: instance=Date, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.greaterThan(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("GREATER_THAN: instance=Double, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.greaterThan(path.as(Double.class), (Double) (value));
+                    logger.debug("GREATER_THAN: instance=Double, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.greaterThan((Expression)path, (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("GREATER_THAN: instance=Integer, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.greaterThan(path.as(Integer.class), (Integer) (value));
+                    logger.debug("GREATER_THAN: instance=Integer, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.greaterThan((Expression)path, (Integer) (value));
                 } else {
-                    logger.debug("GREATER_THAN: instance=String, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("GREATER_THAN: instance=String, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.greaterThan(path.as(String.class), (value).toString());
                 }
                 break;
             case GREATER_THAN_OR_EQUAL:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.greaterThanOrEqualTo(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.greaterThanOrEqualTo(path.as(Double.class), (Double) (value));
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.greaterThanOrEqualTo((Expression)path, (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.greaterThanOrEqualTo(path.as(Integer.class), (Integer) (value));
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.greaterThanOrEqualTo((Expression)path, (Integer) (value));
                 } else {
-                    logger.debug("GREATER_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("GREATER_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.greaterThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("LESS_THAN: instance=Date, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("LESS_THAN: instance=Date, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.lessThan(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("LESS_THAN: instance=Double, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.lessThan(path.as(Double.class), (Double) (value));
+                    logger.debug("LESS_THAN: instance=Double, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.lessThan((Expression)path, (Double) (value));
                 } else if (value instanceof Integer) {
-                    logger.debug("LESS_THAN: instance=Integer, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.lessThan(path.as(Integer.class), (Integer) (value));
+                    logger.debug("LESS_THAN: instance=Integer, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.lessThan((Expression)path, (Integer) (value));
                 } else {
-                    logger.debug("LESS_THAN: instance=String, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("LESS_THAN: instance=String, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.lessThan(path.as(String.class), (value).toString());
                 }
                 break;
             case LESS_THAN_OR_EQUAL:
                 value = parseValue(path, value);
                 if (value instanceof Date) {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=Date, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.lessThanOrEqualTo(path.as(Date.class), (Date) (value));
                 } else if (value instanceof Double) {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.lessThanOrEqualTo(path.as(Double.class), (Double) (value));
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=Double, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.lessThanOrEqualTo((Expression)path, (Double)value);
                 } else if (value instanceof Integer) {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path.getAlias());
-                    p = cb.lessThanOrEqualTo(path.as(Integer.class), (Integer) (value));
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=Integer, value=({}), expression=({})", value, path.getJavaType());
+                    p = cb.lessThanOrEqualTo((Expression)path, (Integer)value);
                 } else {
-                    logger.debug("LESS_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path.getAlias());
+                    logger.debug("LESS_THAN_OR_EQUAL: instance=String, value=({}), expression=({})", value, path.getJavaType());
                     p = cb.lessThanOrEqualTo(path.as(String.class), (value).toString());
                 }
                 break;
