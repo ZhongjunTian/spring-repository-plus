@@ -250,7 +250,7 @@ public class WhereSpecification implements Specification<Object> {
     }
 
     private boolean assertCollection(Object value) {
-        logger.info("assertCollection: {}, {}", value.getClass().getSimpleName(), value);
+        logger.debug("assertCollection: {}, {}", value.getClass().getSimpleName(), value);
         if (value instanceof Collection) {
             return true;
         }
