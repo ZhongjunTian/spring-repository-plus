@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -91,7 +93,6 @@ public class WhereSpecification implements Specification<Object> {
                     ", Date, Time, TimeStamp, Calendar");
         }
         value = parseValue(path, value);
-        logger.debug("{}: value=({}), instance=({})", operator, value, path.getJavaType());
         switch (operator) {
             /*
                 Operator for Comparable type
@@ -197,6 +198,7 @@ public class WhereSpecification implements Specification<Object> {
     }
 
     private Object parseValue(Path<Object> path, Object value) {
+        logger.debug("{}: value=({}), type=({})", "parseValue", value, path.getJavaType());
         if (Date.class.isAssignableFrom(path.getJavaType())) {
             try {
                 SimpleDateFormat dateFormat = this.dateFormat != null ? this.dateFormat : defaultDateFormat;
@@ -207,7 +209,35 @@ public class WhereSpecification implements Specification<Object> {
         }
 
         if(Boolean.class.isAssignableFrom(path.getJavaType()) || Boolean.TYPE.isAssignableFrom(path.getJavaType()))
-            return Boolean.parseBoolean( value.toString() );
+            return Boolean.parseBoolean(value.toString());
+
+        if(Enum.class.isAssignableFrom(path.getJavaType())) {
+            if(value instanceof Collection) {
+                ((List) value).replaceAll(x -> parseValue(path, x));
+                return value;
+            }
+            try {
+                Class<?> clazz = Class.forName(path.getJavaType().getTypeName());
+                Method method = clazz.getDeclaredMethod("valueOf", String.class);
+                return method.invoke(clazz, value.toString());
+            } catch (ClassNotFoundException e) {
+                logger.error("ClassNotFoundException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
+                        path.getJavaType(), path.getJavaType().getCanonicalName());
+                throw new SpecificationException(e);
+            } catch (NoSuchMethodException e) {
+                logger.error("NoSuchMethodException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
+                        path.getJavaType(), path.getJavaType().getCanonicalName());
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                logger.error("IllegalAccessException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
+                        path.getJavaType(), path.getJavaType().getCanonicalName());
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                logger.error("InvocationTargetException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
+                        path.getJavaType(), path.getJavaType().getCanonicalName());
+                e.printStackTrace();
+            }
+        }
 
         if(Byte.class.isAssignableFrom(path.getJavaType()) || Byte.TYPE.isAssignableFrom(path.getJavaType()))
             return Byte.parseByte( value.toString() );
