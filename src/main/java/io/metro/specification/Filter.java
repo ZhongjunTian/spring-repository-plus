@@ -32,6 +32,7 @@ public class Filter {
     public static final String GREATER_THAN_OR_EQUAL = "gte";
     public static final String LESS_THAN_OR_EQUAL = "lte";
     public static final String IN = "in";
+    public static final String BETWEEN = "between";
 
     //delimiter for crossing table search
     public static final String PATH_DELIMITER = ".";
