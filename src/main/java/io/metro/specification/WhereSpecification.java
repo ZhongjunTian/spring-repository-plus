@@ -185,6 +185,31 @@ public class WhereSpecification implements Specification<Object> {
             /*
                 Functionality in experimenting;
              */
+            case BETWEEN:
+                if (assertCollection(value)) {
+                    List<Object> list = (List<Object>)value;
+                    if (list.get(0) instanceof Date) {
+                        Date item1 = (Date) list.get(0);
+                        Date item2 = (Date) list.get(1);
+                        p = cb.between(path.as(Date.class), item1, item2);
+
+                    } else if (list.get(0) instanceof Double) {
+                        Double item1 = (Double) list.get(0);
+                        Double item2 = (Double) list.get(1);
+                        p = cb.between((Expression)path, item1, item2);
+
+                    } else if (list.get(0) instanceof Integer) {
+                        Integer item1 = (Integer) list.get(0);
+                        Integer item2 = (Integer) list.get(1);
+                        p = cb.between((Expression)path, item1, item2);
+
+                    } else {
+                        String item1 = (String) list.get(0);
+                        String item2 = (String) list.get(1);
+                        p = cb.between(path.as(String.class), item1, item2);
+                    }
+                }
+                break;
             case IN:
                 if (assertCollection(value)) {
                     p = path.in((Collection) value);
