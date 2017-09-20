@@ -269,6 +269,11 @@ public class WhereSpecification implements Specification<Object> {
             }
         }
 
+        if(value instanceof Collection) {
+            ((List) value).replaceAll(x -> parseValue(path, x));
+            return value;
+        }
+
         if(Byte.class.isAssignableFrom(path.getJavaType()) || Byte.TYPE.isAssignableFrom(path.getJavaType()))
             return Byte.parseByte( value.toString() );
 
