@@ -170,7 +170,7 @@ public class Filter {
                 }
                 if (i + 3 <= e)
                     if (!params[i + 3].equals(logic) || !params[i + 3].equals(AND) && !params[i + 3].equals(OR))
-                        throw new SpecificationException("Illegal logic or mixed logic in one level bracket");
+                        throw new SpecificationException("Illegal criteria logic or mixed logic in one level bracket");
                 Filter filter = new Filter(params[i], params[i + 1], params[i + 2]);
                 filters.add(filter);
                 i += 4;
@@ -212,6 +212,6 @@ public class Filter {
                 return j + 2;
             }
         }
-        throw new SpecificationException("");//TODO
+        throw new SpecificationException("Illegal criteria logic, closing right bracket \"]\" not found");
     }
 }

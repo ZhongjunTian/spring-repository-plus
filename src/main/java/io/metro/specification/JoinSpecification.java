@@ -7,7 +7,7 @@ import java.util.List;
 
 public class JoinSpecification implements Specification<Object> {
     List<String> leftJoinFetchTables;
-    List<String> innnerJoinFetchTables;
+    List<String> innerJoinFetchTables;
     List<String> rightJoinFetchTables;
 
     public JoinSpecification() {
@@ -22,7 +22,7 @@ public class JoinSpecification implements Specification<Object> {
             return null;
 
         join(root, leftJoinFetchTables, JoinType.LEFT);
-        join(root, innnerJoinFetchTables, JoinType.INNER);
+        join(root, innerJoinFetchTables, JoinType.INNER);
         join(root, rightJoinFetchTables, JoinType.RIGHT);
         ((CriteriaQuery<Object>) cq).select(root);
         return null;
@@ -57,7 +57,7 @@ public class JoinSpecification implements Specification<Object> {
     }
 
     public JoinSpecification setInnerJoinFetchTables(List<String> innerJoinFetchTables) {
-        this.innnerJoinFetchTables = innerJoinFetchTables;
+        this.innerJoinFetchTables = innerJoinFetchTables;
         return this;
     }
 

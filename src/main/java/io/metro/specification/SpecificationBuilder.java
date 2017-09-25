@@ -44,7 +44,8 @@ public class SpecificationBuilder<T> {
 
     public SpecificationBuilder<T> where(Filter filter) {
         if (this.repository == null) {
-            throw new IllegalStateException("Repository not specified, please use selectFrom(repository) or selectDistinctFrom(repository) before where()");
+            throw new IllegalStateException("Repository not specified, please use selectFrom(repository) or " +
+                    "selectDistinctFrom(repository) before where()");
         }
         specification.add(new WhereSpecification(filter));
         return this;

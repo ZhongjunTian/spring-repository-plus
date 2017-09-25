@@ -25,11 +25,13 @@ public class WhereSpecification implements Specification<Object> {
     }
 
     @Override
-    public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) throws SpecificationException {
+    public Predicate
+    toPredicate(Root<Object> root, CriteriaQuery<?> cq, CriteriaBuilder cb) throws SpecificationException {
         return getPredicate(filter, root, cb);
     }
 
-    private Predicate getPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
+    private Predicate
+    getPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
         if (isInValidFilter(filter))
             return null;
         if (filter.getLogic() == null) {//one filter
@@ -48,7 +50,8 @@ public class WhereSpecification implements Specification<Object> {
         }
     }
 
-    private Predicate[] getPredicateList(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
+    private Predicate[]
+    getPredicateList(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
         List<Predicate> predicateList = new LinkedList<>();
         for (Filter f : filter.getFilters()) {
             Predicate predicate = getPredicate(f, root, cb);
@@ -65,30 +68,37 @@ public class WhereSpecification implements Specification<Object> {
                         filter.getLogic() == null && filter.getValue() == null && filter.getOperator() == null);
     }
 
-    private Predicate doGetPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
+    private Predicate
+    doGetPredicate(Filter filter, Path<Object> root, CriteriaBuilder cb) throws SpecificationException {
         String field = filter.getField();
         Path<Object> path = null;
         try {
             path = parsePath(root, field);
         } catch (Exception e) {
-            throw new SpecificationException("Exception occurred when parsing field path: " + field + ", this path does not exist. " + e.getMessage(), e);
+            throw new SpecificationException("Exception occurred when parsing field path: " + field +
+                    ", this path does not exist. " + e.getMessage(), e);
         }
         String operator = filter.getOperator();
         Object value = filter.getValue();
         try {
             return doGetPredicate(cb, path, operator, value);
         } catch (Exception e) {
-            throw new SpecificationException("Unable to filter by: " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
+            throw new SpecificationException(
+                    "Unable to filter by: " + String.valueOf(filter) + ", value type:" + value.getClass() +
+                            ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " +
+                            e.getMessage(), e);
         }
     }
 
-    private Predicate doGetPredicate(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
+    private Predicate
+    doGetPredicate(CriteriaBuilder cb, Path<Object> path, String operator, Object value) throws SpecificationException {
         Class<? extends Object> entityType = path.getJavaType();
         Predicate p = null;
         //look at Hibernate Mapping types
         //we only support primitive types and data/time types
         if (!(value instanceof Comparable) && !(value instanceof Collection)) {
-            throw new IllegalStateException("This library only support primitive types and date/time types in the list: " +
+            throw new IllegalStateException("This library only support primitive types and " +
+                    "date/time types in the list: " +
                     "Integer, Long, Double, Float, Short, BidDecimal, Character, String, Byte, Boolean" +
                     ", Date, Time, TimeStamp, Calendar");
         }
@@ -234,7 +244,8 @@ public class WhereSpecification implements Specification<Object> {
                 SimpleDateFormat dateFormat = this.dateFormat != null ? this.dateFormat : defaultDateFormat;
                 return  dateFormat.parse(value.toString());
             } catch (ParseException e) {
-                throw new SpecificationException("Illegal date format: " + value + ", required format is " + dateFormat.toPattern());
+                throw new SpecificationException(
+                        "Illegal date format: " + value + ", required format is " + dateFormat.toPattern(), e);
             }
         }
 
@@ -251,21 +262,29 @@ public class WhereSpecification implements Specification<Object> {
                 Method method = clazz.getDeclaredMethod("valueOf", String.class);
                 return method.invoke(clazz, value.toString());
             } catch (ClassNotFoundException e) {
+                String error = String.format("ClassNotFoundException %s: value=(%s, type=(%s), class=(%s)",
+                        e.getMessage(), value, path.getJavaType(), path.getJavaType().getCanonicalName());
                 logger.error("ClassNotFoundException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
                         path.getJavaType(), path.getJavaType().getCanonicalName());
-                throw new SpecificationException(e);
+                throw new SpecificationException(error, e);
             } catch (NoSuchMethodException e) {
+                String error = String.format("NoSuchMethodException %s: value=(%s, type=(%s), class=(%s)",
+                        e.getMessage(), value, path.getJavaType(), path.getJavaType().getCanonicalName());
                 logger.error("NoSuchMethodException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
                         path.getJavaType(), path.getJavaType().getCanonicalName());
-                e.printStackTrace();
+                throw new SpecificationException(error, e);
             } catch (IllegalAccessException e) {
+                String error = String.format("IllegalAccessException %s: value=(%s, type=(%s), class=(%s)",
+                        e.getMessage(), value, path.getJavaType(), path.getJavaType().getCanonicalName());
                 logger.error("IllegalAccessException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
                         path.getJavaType(), path.getJavaType().getCanonicalName());
-                e.printStackTrace();
+                throw new SpecificationException(error, e);
             } catch (InvocationTargetException e) {
+                String error = String.format("InvocationTargetException %s: value=(%s, type=(%s), class=(%s)",
+                        e.getMessage(), value, path.getJavaType(), path.getJavaType().getCanonicalName());
                 logger.error("InvocationTargetException {}: value=({}), type=({}), class=({})", e.getMessage(), value,
                         path.getJavaType(), path.getJavaType().getCanonicalName());
-                e.printStackTrace();
+                throw new SpecificationException(error, e);
             }
         }
 
