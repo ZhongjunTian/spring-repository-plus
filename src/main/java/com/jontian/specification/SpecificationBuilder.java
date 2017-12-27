@@ -68,6 +68,11 @@ public class SpecificationBuilder<T> {
         return this;
     }
 
+    public SpecificationBuilder<T> where(String field, String operator, Object value) {
+        Filter filter = new Filter(field, operator, value);
+        return where(filter);
+    }
+
     public SpecificationBuilder<T> leftJoin(String... tables) {
         specification.add(new JoinSpecification().setLeftJoinFetchTables(Arrays.asList(tables)));
         return this;
