@@ -35,17 +35,17 @@ public class SpecificationBuilder<T> {
     private JpaSpecificationExecutor repository;
     private SpecificationImpl specification;
 
-    public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
-    SpecificationBuilder<ENTITY> selectFrom(REPO repository) {
-        SpecificationBuilder<ENTITY> builder = new SpecificationBuilder<>();
+    public static <T, R extends JpaRepository<T, ?> & JpaSpecificationExecutor>
+    SpecificationBuilder<T> selectFrom(R repository) {
+        SpecificationBuilder<T> builder = new SpecificationBuilder<>();
         builder.repository = repository;
         builder.specification = new SpecificationImpl();
         return builder;
     }
 
-    public static <ENTITY, REPO extends JpaRepository<ENTITY, ?> & JpaSpecificationExecutor>
-    SpecificationBuilder<ENTITY> selectDistinctFrom(REPO repository) {
-        SpecificationBuilder<ENTITY> builder = selectFrom(repository);
+    public static <T, R extends JpaRepository<T, ?> & JpaSpecificationExecutor>
+    SpecificationBuilder<T> selectDistinctFrom(R repository) {
+        SpecificationBuilder<T> builder = selectFrom(repository);
         builder.distinct();
         return builder;
     }
