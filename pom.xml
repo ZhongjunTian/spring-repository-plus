@@ -47,15 +47,10 @@
 
     <distributionManagement>
         <repository>
-            <id>metro.central</id>
-            <name>ip-172-31-10-162-releases</name>
-            <url>http://ec2-174-129-71-214.compute-1.amazonaws.com/artifactory/metrolabs</url>
+            <id>maven.pivotenergy.io</id>
+            <name>maven.pivotenergy.io</name>
+            <url>https://maven.pivotenergy.io/artifactory/metrolabs</url>
         </repository>
-        <snapshotRepository>
-            <id>metro.snapshots</id>
-            <name>ip-172-31-10-162-snapshots</name>
-            <url>http://ec2-174-129-71-214.compute-1.amazonaws.com/artifactory/metrolabs</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <build>
