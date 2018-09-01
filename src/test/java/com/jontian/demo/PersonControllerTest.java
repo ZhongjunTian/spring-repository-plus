@@ -34,7 +34,7 @@ public class PersonControllerTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String simpleFilter = "{\n" +
-                "\"field\":\"lastName\", \"operator\":\"eq\", \"value\":\"Tian\"\n" +
+                "\"field\":\"address.city\", \"operator\":\"eq\", \"value\":\"Dallas\"\n" +
                 "}";
         logger.info("Simple Filter:");
         logger.info(simpleFilter);
@@ -42,6 +42,14 @@ public class PersonControllerTest {
         String persons = resp.getBody();
         Assert.assertEquals(resp.getStatusCode(), HttpStatus.OK);
         Assert.assertTrue(persons.length()>0);
+
+    }
+
+    @Test
+    public void complexFilter() {
+        ResponseEntity<String> resp;
+        String persons;HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         String complexFilter = "{\n" +
                 "\"logic\" : \"and\",\n" +
                 "\"filters\":[\n" +
@@ -65,6 +73,7 @@ public class PersonControllerTest {
         logger.info(complexFilter);
         resp = restTemplate.postForEntity("/persons", new HttpEntity<>(complexFilter,headers), String.class);
         persons = resp.getBody();
+        System.out.println(persons);
         Assert.assertEquals(resp.getStatusCode(), HttpStatus.OK);
         Assert.assertTrue(persons.length()>0);
     }

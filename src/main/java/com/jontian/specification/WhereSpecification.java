@@ -69,13 +69,16 @@ public class WhereSpecification implements Specification<Object> {
         String field = filter.getField();
         Path<Object> path = null;
         try {
+            logger.debug("Parsing child path {} of root {}", field, root.getJavaType());
             path = parsePath(root, field);
         } catch (Exception e) {
-            throw new SpecificationException("Meet problem when parse field path: " + field + ", this path does not exist. " + e.getMessage(), e);
+            throw new SpecificationException("Met problem when parse field path: " + field + ", this path does not exist. " + e.getMessage(), e);
         }
         String operator = filter.getOperator();
         Object value = filter.getValue();
         try {
+            logger.debug("Working on root {}, field {}, java type {}, operator {}, value {}",
+                    root.getJavaType(),field, path.getJavaType(), operator, value);
             return doGetPredicate(cb, path, operator, value);
         } catch (Exception e) {
             throw new SpecificationException("Unable to filter by: " + String.valueOf(filter) + ", value type:" + value.getClass() + ", operator: " + operator + ", entity type:" + path.getJavaType() + ", message: " + e.getMessage(), e);
@@ -92,6 +95,7 @@ public class WhereSpecification implements Specification<Object> {
                     "Integer, Long, Double, Float, Short, BidDecimal, Character, String, Byte, Boolean" +
                     ", Date, Time, TimeStamp, Calendar");
         }
+
         switch (operator) {
             /*
                 Operator for Comparable type

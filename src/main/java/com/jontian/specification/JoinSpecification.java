@@ -1,5 +1,7 @@
 package com.jontian.specification;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
@@ -9,6 +11,7 @@ import java.util.List;
  * Created by zhongjun on 6/18/17.
  */
 public class JoinSpecification implements Specification<Object> {
+    private static Logger logger = LoggerFactory.getLogger(JoinSpecification.class);
     List<String> leftJoinFetchTables;
     List<String> innnerJoinFetchTables;
     List<String> rightJoinFetchTables;
@@ -47,6 +50,8 @@ public class JoinSpecification implements Specification<Object> {
 
     private void join(Root<Object> root, List<String> joinFetchTables, JoinType type) {
         if (joinFetchTables != null && (joinFetchTables.size() > 0)) {
+            logger.debug("{} join root {} with table {}",
+                    type.name(), root.getJavaType(), joinFetchTables);
             for (String table : joinFetchTables) {
                 if (table != null)
                     root.fetch(table, type);
